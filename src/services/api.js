@@ -6,19 +6,38 @@ const getToken = async () => {
   const response = await axios.get(
     `${BASE_URL}/auth/anonymous?platform=subscriptions`,
   );
-  return await response.data;
+  const token = await response.data;
+
+  try {
+    localStorage.setItem('token', JSON.stringify(token));
+    return token;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const getCourses = async () => {
-  const currentToken = await getToken();
-  const { token } = currentToken;
-  const res = await axios.get(`${BASE_URL}/core/preview-courses`, {
+const getCourses = async (token) => {
+  try {
+    const res = await axios.get(`${BASE_URL}/core/preview-courses`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCourseByID = async (courseId) => {
+  const currentToken = JSON.parse(localStorage.getItem('token'));
+  const res = await axios.get(`${BASE_URL}/core/preview-courses/:${courseId}`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${currentToken.token}`,
     },
   });
   console.log(res.data);
   return res.data;
 };
 
-export { getCourses };
+export { getToken, getCourses, getCourseByID };
