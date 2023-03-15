@@ -4,7 +4,9 @@ const BASE_URL = 'https://api.wisey.app/api/v1';
 
 const getToken = async () => {
   const response = await axios.get(
-    `${BASE_URL}/auth/anonymous?platform=subscriptions`,
+    `${BASE_URL}/auth/anonymous?platform=subscriptions`, {
+    mode: "no-cors"
+  }
   );
   const token = await response.data;
 

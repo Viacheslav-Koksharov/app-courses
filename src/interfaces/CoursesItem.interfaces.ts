@@ -1,10 +1,28 @@
 interface ICoursesItem {
-    id: number;
+    id: string;
     title: string;
-    imageUrl: string;
-    summary: string;
-    publishedAt: string;
-    filter: string;
+    tags: String[];
+    launchDate: string;
+    status: string;
+    description: string;
+    duration: string;
+    lessonsCount: number;
+    containsLockedLessons: boolean;
+    previewImageLink: string;
+    rating: number;
+    meta: {
+        slug: string;
+        skills: [];
+        courseVideoPreview: {
+            link: string;
+            duration: number;
+            previewImageLink: string;
+        };
+    };
 }
 
-export type { ICoursesItem };
+interface ICoursesItemComponentProps {
+    course: ICoursesItem
+}
+
+export type { ICoursesItemComponentProps, ICoursesItem };
