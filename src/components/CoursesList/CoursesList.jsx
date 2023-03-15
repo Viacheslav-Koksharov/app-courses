@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import videojs from 'video.js';
+// import videojs from 'video.js';
 import {
   List,
   ListItem,
@@ -12,24 +12,38 @@ import {
   SkillItem,
 } from './CoursesList.styled';
 const CoursesList = ({ currentCourses }) => {
-  const videoNode = useRef(null);
-  const [player, setPlayer] = useState(null);
+  // const videoNode = useRef(null);
+  // const [player, setPlayer] = useState(null);
 
+  // useEffect(() => {
+  //   if (videoNode.current) {
+  //     const _player = videojs(videoNode.current);
+  //     setPlayer(_player);
+  //     return () => {
+  //       if (player !== null) {
+  //         player.dispose();
+  //       }
+  //     };
+  //   }
+  // }, [player]);
   useEffect(() => {
-    if (videoNode.current) {
-      const _player = videojs(videoNode.current);
-      setPlayer(_player);
-      return () => {
-        if (player !== null) {
-          player.dispose();
-        }
-      };
+    if (window.Hls.isSupported()) {
+      const video = document.getElementById('video');
+      // eslint-disable-next-line no-undef
+      var hls = new Hls();
+      hls.loadSource(
+        'https://wisey.app/videos/how-to-learn/preview/AppleHLS1/preview.m3u8',
+      );
+      hls.attachMedia(video);
+      // video.muted = true;
+      video.play();
     }
-  }, [player]);
+  }, []);
 
   return (
     <>
-      <List>
+      <video id="video" controls></video>
+      {/* <List>
         {currentCourses.courses.map(course => {
           return (
             <ListItem key={course.id}>
@@ -61,7 +75,7 @@ const CoursesList = ({ currentCourses }) => {
             </ListItem>
           );
         })}
-      </List>
+      </List> */}
     </>
   );
 };

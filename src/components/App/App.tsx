@@ -10,7 +10,13 @@ const Homepage = lazy(
 const CoursePage = lazy(
   () =>
     import(
-      '../../views/CoursePage/CoursePage' /* webpackChunkName: "ArticlePage" */
+      '../../views/CoursePage/CoursePage' /* webpackChunkName: "CoursePage" */
+    ),
+);
+const LessonPage = lazy(
+  () =>
+    import(
+      '../../views/LessonPage/LessonPage' /* webpackChunkName: "LessonPage" */
     ),
 );
 
@@ -31,6 +37,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/courses/:id" element={<CoursePage />} />
+          <Route path="/courses/:id/lesson" element={<LessonPage />} />
         </Routes>
       </Suspense>
     </Container>

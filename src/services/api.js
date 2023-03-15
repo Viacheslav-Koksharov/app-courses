@@ -30,14 +30,17 @@ const getCourses = async (token) => {
 };
 
 const getCourseByID = async (courseId) => {
-  const currentToken = JSON.parse(localStorage.getItem('token'));
-  const res = await axios.get(`${BASE_URL}/core/preview-courses/:${courseId}`, {
-    headers: {
-      Authorization: `Bearer ${currentToken.token}`,
-    },
-  });
-  console.log(res.data);
-  return res.data;
+  try {
+    const currentToken = JSON.parse(localStorage.getItem('token'));
+    const res = await axios.get(`${BASE_URL}/core/preview-courses/${courseId}`, {
+      headers: {
+        Authorization: `Bearer ${currentToken.token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export { getToken, getCourses, getCourseByID };

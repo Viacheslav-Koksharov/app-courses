@@ -32,11 +32,11 @@ const HomePage = () => {
     getCurrentCourses();
   }, [currentToken]);
 
-  useEffect(() => {
-    if (currentCourses) {
-      console.log(currentCourses);
-    }
-  }, [currentCourses]);
+  // useEffect(() => {
+  //   if (currentCourses) {
+  //     console.log(currentCourses);
+  //   }
+  // }, [currentCourses]);
 
   const handleMoreImage = () => {
     setNext(next + imagePerPage);
