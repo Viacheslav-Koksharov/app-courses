@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import Container from '../Container/Container';
 import Loader from '../Loader/Loader';
 
 const Homepage = lazy(
@@ -15,22 +16,24 @@ const CoursePage = lazy(
 
 const App: React.FC = () => {
   return (
-    <Suspense
-      fallback={
-        <Loader
-          ariaLabel={'ThreeDots'}
-          height={100}
-          width={100}
-          radius={5}
-          color={'#708db3'}
-        />
-      }
-    >
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/courses/:id" element={<CoursePage />} />
-      </Routes>
-    </Suspense>
+    <Container>
+      <Suspense
+        fallback={
+          <Loader
+            ariaLabel={'ThreeDots'}
+            height={100}
+            width={100}
+            radius={5}
+            color={'#708db3'}
+          />
+        }
+      >
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/courses/:id" element={<CoursePage />} />
+        </Routes>
+      </Suspense>
+    </Container>
   );
 };
 
