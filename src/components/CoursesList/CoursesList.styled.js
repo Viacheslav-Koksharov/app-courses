@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Pagination from '@mui/material/Pagination';
 
 const List = styled.ul`
     display: flex;
@@ -9,4 +10,11 @@ const List = styled.ul`
     margin:0 ;
 `;
 
-export { List };
+const PaginationStyle = styled(Pagination)`
+&& {
+    display: flex;
+        flex-direction: column;
+        align-items: center;
+  }
+`;
+export { List, PaginationStyle };

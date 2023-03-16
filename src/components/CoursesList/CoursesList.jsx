@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import CoursesItem from '../CoursesItem';
-import { List } from './CoursesList.styled';
-import Pagination from '@mui/material/Pagination';
+import { List, PaginationStyle } from './CoursesList.styled';
+// import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import usePagination from '../../services/usePagination';
 
@@ -31,7 +31,7 @@ const CoursesList = ({ currentCourses }) => {
         ))}
       </List>
       <Stack spacing={2}>
-        <Pagination
+        <PaginationStyle
           count={count}
           size="large"
           page={page}
