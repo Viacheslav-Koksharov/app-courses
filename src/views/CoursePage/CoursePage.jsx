@@ -24,11 +24,11 @@ const CoursePage = () => {
     getCurrentCourseByID();
   }, [id]);
 
-  useEffect(() => {
-    if (oneCourse) {
-      console.log(oneCourse);
-    }
-  }, [oneCourse]);
+  // useEffect(() => {
+  //   if (oneCourse) {
+  //     console.log(oneCourse);
+  //   }
+  // }, [oneCourse]);
 
   return (
     <>
