@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CoursesItem from '../CoursesItem';
 import { ListStyled, PaginationStyled } from './CoursesList.styled';
 import Stack from '@mui/material/Stack';
@@ -11,10 +11,13 @@ const CoursesList = ({ currentCourses }) => {
   const count = Math.ceil(courses.length / PER_PAGE);
   const pagination = usePagination(courses, PER_PAGE);
 
+  useEffect(() => {
+    pagination.jump(page);
+    scrollToTop();
+  }, [page, pagination]);
+
   const handleChange = (e, p) => {
     setPage(p);
-    pagination.jump(p);
-    scrollToTop();
   };
 
   const scrollToTop = () => {

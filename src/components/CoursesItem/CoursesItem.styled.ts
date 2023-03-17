@@ -17,6 +17,7 @@ const ListItemS = styled.li`
 
   @media screen and (min-width: ${desktop}px) {
     width: calc((100% - 50px) / 2);
+    padding: 40px 20px;
   }
 `;
 

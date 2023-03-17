@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import Hls from 'hls.js';
+import { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { CourseContext } from '../../context/CourseContextProvider';
 import { getCourseByID } from '../../services/api';
 import {
   ImageContainer,
@@ -12,7 +14,7 @@ import LessonsList from '../../components/LessonsList';
 
 const CoursePage = () => {
   const { id } = useParams();
-  const [oneCourse, setOneCourse] = useState(null);
+  const { oneCourse, setOneCourse } = useContext(CourseContext);
 
   useEffect(() => {
     async function getCurrentCourseByID() {
@@ -20,33 +22,22 @@ const CoursePage = () => {
       setOneCourse(course);
     }
     getCurrentCourseByID();
-  }, [id]);
-
-  // useEffect(() => {
-  //   if (oneCourse) {
-  //     console.log(oneCourse);
-  //   }
-  // }, [oneCourse]);
+  }, [id, setOneCourse]);
+  console.log(oneCourse);
+  useEffect(() => {
+    if (window.Hls.isSupported() && oneCourse?.lessons[0]?.link) {
+      const video = document.getElementById('video');
+      var hls = new Hls();
+      hls.loadSource(oneCourse?.lessons[0]?.link);
+      hls.attachMedia(video);
+    }
+  }, [oneCourse?.lessons, oneCourse?.previewImageLink]);
 
   return (
     <>
       <h2>{oneCourse?.title}</h2>
       <ImageContainer>
-        <video
-          poster={oneCourse?.previewImageLink + '/cover.webp'}
-          width="100%"
-          height="100%"
-          controls
-        >
-          <source
-            // src={oneCourse?.lessons[0]?.link}
-            // type="application/x-mpegURL"
-            src={
-              'https://rawcdn.githack.com/Freshman-tech/custom-html5-video/911e6fbfc39d670cb26e94d6f3013b9426f4a679/video.mp4'
-            }
-            type="video/mp4"
-          />
-        </video>
+        <video id="video" width="100%" height="100%" controls></video>
       </ImageContainer>
       <TextStyled>Description: {oneCourse?.description}</TextStyled>
       <SkillStyled>Skills:</SkillStyled>
@@ -56,18 +47,6 @@ const CoursePage = () => {
         ))}
       </SkillsList>
       {oneCourse && <LessonsList oneCourse={oneCourse} />}
-      {/* <List>
-        {oneCourse?.lessons?.map(lesson => {
-          return (
-            <ListItem key={lesson.id}>
-              <LinkItem to={`lesson`}>
-                Lesson{lesson.order}. {lesson.title}
-              </LinkItem>
-            </ListItem>
-          );
-        })}
-      </List>
-      <Outlet /> */}
     </>
   );
 };

@@ -22,7 +22,8 @@ interface ICoursesItem {
 }
 
 interface ICoursesItemComponentProps {
-    course: ICoursesItem
+    course: ICoursesItem,
+
 }
 
 export type { ICoursesItemComponentProps, ICoursesItem };

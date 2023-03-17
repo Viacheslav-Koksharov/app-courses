@@ -1,6 +1,6 @@
 import Hls from 'hls.js';
 import { useEffect } from 'react';
-import { onHoverVideo } from '../../helpers/hoverHelper';
+import { onHoverElement } from '../../helpers/hoverHelper';
 import { ICoursesItemComponentProps } from '../../interfaces/CoursesItem.interfaces';
 import {
   ListItemS,
@@ -20,27 +20,44 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
   useEffect(() => {
     if (window.Hls.isSupported() && course?.meta?.courseVideoPreview?.link) {
       const video = document.getElementById(
-        `id-${previewImageLink}-${courseVideoPreview}`,
+        `id-${previewImageLink}-${title}`,
       ) as HTMLMediaElement;
-      var hls = new Hls();
-      hls.loadSource(courseVideoPreview?.link);
-      hls.attachMedia(video);
-      video.setAttribute('poster', previewImageLink + '/cover.webp');
 
-      onHoverVideo(video);
+      var hls = new Hls();
+      hls.loadSource(courseVideoPreview.link);
+      hls.attachMedia(video);
+
+      video.setAttribute('poster', previewImageLink + '/cover.webp');
+      onHoverElement(video);
     }
-  }, [course, courseVideoPreview, previewImageLink]);
+  }, [course, courseVideoPreview, previewImageLink, title]);
+
+  useEffect(() => {
+    const image = document.getElementById(`unavailable-${previewImageLink}`);
+
+    if (image) {
+      onHoverElement(image, `${previewImageLink + '/cover.webp'}`);
+    }
+  }, [previewImageLink]);
 
   return (
     <ListItemS key={id}>
       <LinkItemS to={`/courses/${id}`}>
         <ImageContainerS>
-          <video
-            id={`id-${previewImageLink}-${courseVideoPreview}`}
-            width="100%"
-            height="100%"
-            muted
-          ></video>
+          {courseVideoPreview ? (
+            <video
+              id={`id-${previewImageLink}-${title}`}
+              width="100%"
+              height="100%"
+              muted
+            ></video>
+          ) : (
+            <img
+              id={`unavailable-${previewImageLink}`}
+              src={previewImageLink + '/cover.webp'}
+              alt="banner"
+            />
+          )}
         </ImageContainerS>
         <TitleS>{title}</TitleS>
         <TextS>Lessons: {lessonsCount}</TextS>

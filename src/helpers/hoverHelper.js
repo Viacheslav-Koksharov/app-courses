@@ -1,22 +1,32 @@
-const onHoverVideo = video => {
+import img_unavailableVideo from '../images/error_unavailableVideo.png';
+
+const onHoverElement = (element, sourceAttr = '') => {
   let start;
 
   const startPreview = () => {
-    video.play();
+    if (element.play && typeof element.play === 'function') {
+      element.play();
+    } else {
+      element.src = img_unavailableVideo;
+    }
   };
 
   const stopPreview = () => {
-    video.pause();
+    if (element.pause && typeof element.pause === 'function') {
+      element.pause();
+    } else {
+      element.src = sourceAttr;
+    }
   };
 
-  video.addEventListener('mouseenter', () => {
+  element.addEventListener('mouseenter', () => {
     start = setTimeout(startPreview, 1000);
   });
 
-  video.addEventListener('mouseleave', () => {
+  element.addEventListener('mouseleave', () => {
     clearTimeout(start);
     stopPreview();
   });
 };
 
-export { onHoverVideo };
+export { onHoverElement };
