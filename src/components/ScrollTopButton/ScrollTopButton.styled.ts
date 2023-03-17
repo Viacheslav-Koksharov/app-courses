@@ -1,15 +1,19 @@
 import styled from 'styled-components';
+import { secondary } from '../../utils/breakpoints';
+import { colors } from '../../utils/colors';
 
-const Button = styled.div`
-   position: fixed;
-   width: 100%;
-   left: 96%;
-   bottom: 110px;
-   height: 48px;
-   font-size: 3rem;
-   z-index: 1;
-   cursor: pointer;
-   color: #bbb1df;
-   `;
+const ButtonS = styled.div`
+  position: fixed;
+  right: 30px;
+  bottom: 50px;
+  color: ${colors.accent};
+  font-size: 3rem;
+  cursor: pointer;
+  z-index: 1;
 
-export { Button };
+  @media screen and (min-width: ${secondary.desktop}px) {
+    right: 50px;
+  }
+`;
+
+export { ButtonS };

@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BsArrowUpSquareFill } from 'react-icons/bs';
-import { Button } from './ScrollTopButton.styled';
+import { ButtonS } from './ScrollTopButton.styled';
 
 const ScrollButton = () => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisible = () => {
     const scrolled = document.documentElement.scrollTop;
+
     if (scrolled > 300) {
       setVisible(true);
     } else if (scrolled <= 300) {
@@ -24,12 +25,12 @@ const ScrollButton = () => {
   window.addEventListener('scroll', toggleVisible);
 
   return (
-    <Button>
+    <ButtonS>
       <BsArrowUpSquareFill
         onClick={scrollToTop}
         style={{ display: visible ? 'inline' : 'none' }}
       />
-    </Button>
+    </ButtonS>
   );
 };
 

@@ -1,62 +1,80 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { colors } from '../../utils/colors';
+import { secondary } from '../../utils/breakpoints';
 
-const ListItem = styled.li`
-  width: calc((100% - 10px) / 2);
-  height: 480px;
-  margin: 0 10px 10px 0;
-  &:nth-child(2n) {
-    margin-right: 0px;
-  }
-  &:nth-last-child(-n + 2) {
-    margin-bottom: 0;
-  }
-  box-shadow: 0 1px 1px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%),
-    0 1px 10px 0 rgb(0 0 0 / 12%);
-  :hover {
-    transform: scale(1.005);
+const { desktop } = secondary;
+
+interface Props {
+  accent?: boolean;
+}
+
+const ListItemS = styled.li`
+  margin: 0 0 20px 0;
+  padding: 20px;
+  border: 2px solid ${colors.decor};
+  border-radius: 5px;
+
+  @media screen and (min-width: ${desktop}px) {
+    width: calc((100% - 50px) / 2);
   }
 `;
-const LinkItem = styled(Link)`
+
+const LinkItemS = styled(Link)`
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 5px;
+  align-items: center;
+  height: 100%;
 `;
-const ImageContainer = styled.div`
-  width: 100%;
+
+const ImageContainerS = styled.div`
+  width: 90%;
   height: 250px;
   margin-bottom: 20px;
 `;
-const Title = styled.h5`
+
+const TitleS = styled.h2`
+  align-self: center;
+  width: 90%;
+  height: 50px;
   margin: 0 0 15px 0;
+  text-align: center;
+  color: ${colors.accent};
   font-size: 20px;
 `;
-const TextStyled = styled.p`
-  margin: 0 0 15px 0;
-  font-size: 16px;
+
+const TextS = styled.p`
+  position: ${(props: Props) => (props.accent ? 'absolute' : 'static')};
+  bottom: 0;
+  align-self: ${(props: Props) => (props.accent ? 'flex-end' : 'center')};
+  margin: ${(props: Props) => (props.accent ? '0' : '0 0 15px 0')};
+  font-size: 18px;
+  font-weight: 600;
 `;
-const SkillsList = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
+
+const SkillsListS = styled.ol`
+  align-self: flex-start;
+  padding-inline-start: 20px;
 `;
-const SkillStyled = styled.p`
-  margin: 0;
-  font-size: 16px;
+
+const SkillTitleS = styled.h3`
+  align-self: flex-start;
+  font-size: 18px;
 `;
-const SkillItem = styled.li`
-  padding: 3px;
+
+const SkillsItemS = styled.li`
   margin: 0 15px 15px 0;
   font-size: 16px;
-  border: solid 1px black;
 `;
+
 export {
-  ListItem,
-  ImageContainer,
-  LinkItem,
-  Title,
-  TextStyled,
-  SkillsList,
-  SkillStyled,
-  SkillItem,
+  ListItemS,
+  LinkItemS,
+  ImageContainerS,
+  TitleS,
+  TextS,
+  SkillsListS,
+  SkillTitleS,
+  SkillsItemS,
 };

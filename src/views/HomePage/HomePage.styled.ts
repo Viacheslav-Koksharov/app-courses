@@ -1,7 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-const Title = styled.h1`
+const TitleS = styled.h1`
+  text-align: center;
   font-size: 40px;
 `;
 
-export { Title };
+export { TitleS };

@@ -1,37 +1,38 @@
 import { useState } from 'react';
 import CoursesItem from '../CoursesItem';
-import { List, PaginationStyle } from './CoursesList.styled';
-// import Pagination from '@mui/material/Pagination';
+import { ListStyled, PaginationStyled } from './CoursesList.styled';
 import Stack from '@mui/material/Stack';
-import usePagination from '../../services/usePagination';
+import usePagination from '../../hooks/usePagination';
 
 const CoursesList = ({ currentCourses }) => {
   const { courses } = currentCourses;
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
   const count = Math.ceil(courses.length / PER_PAGE);
-  const _DATA = usePagination(courses, PER_PAGE);
+  const pagination = usePagination(courses, PER_PAGE);
 
   const handleChange = (e, p) => {
     setPage(p);
-    _DATA.jump(p);
+    pagination.jump(p);
     scrollToTop();
   };
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
   };
+
   return (
     <>
-      <List>
-        {_DATA.currentData().map(course => (
+      <ListStyled>
+        {pagination.currentData().map(course => (
           <CoursesItem key={course.id} course={course}></CoursesItem>
         ))}
-      </List>
+      </ListStyled>
       <Stack spacing={2}>
-        <PaginationStyle
+        <PaginationStyled
           count={count}
           size="large"
           page={page}

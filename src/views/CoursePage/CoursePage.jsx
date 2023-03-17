@@ -2,15 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCourseByID } from '../../services/api';
 import {
-  List,
-  ListItem,
   ImageContainer,
-  LinkItem,
   TextStyled,
   SkillsList,
   SkillStyled,
   SkillItem,
 } from './CoursePage.styled';
+import LessonsList from '../../components/LessonsList';
 
 const CoursePage = () => {
   const { id } = useParams();
@@ -57,7 +55,8 @@ const CoursePage = () => {
           <SkillItem key={skill}>{skill} </SkillItem>
         ))}
       </SkillsList>
-      <List>
+      {oneCourse && <LessonsList oneCourse={oneCourse} />}
+      {/* <List>
         {oneCourse?.lessons?.map(lesson => {
           return (
             <ListItem key={lesson.id}>
@@ -68,6 +67,7 @@ const CoursePage = () => {
           );
         })}
       </List>
+      <Outlet /> */}
     </>
   );
 };

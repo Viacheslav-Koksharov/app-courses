@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Title } from './HomePage.styled';
 import { getToken, getCourses } from '../../services/api';
+import { colors } from '../../utils/colors';
+import { IToken } from '../../interfaces/Token.interface';
 import CoursesList from '../../components/CoursesList/CoursesList';
-import ScrollButton from '../../components/ScrollTopButton/ScrollTopButton';
+import ScrollTopButton from '../../components/ScrollTopButton/ScrollTopButton';
+import Loader from '../../components/Loader';
+import { TitleS } from './HomePage.styled';
 
 const HomePage = () => {
-  const [currentToken, setCurrentToken] = useState(null);
+  const [currentToken, setCurrentToken] = useState<IToken>();
   const [currentCourses, setCurrentCourses] = useState(null);
 
   useEffect(() => {
@@ -31,9 +34,21 @@ const HomePage = () => {
 
   return (
     <>
-      <Title>Home Page</Title>
-      {currentCourses && <CoursesList currentCourses={currentCourses} />}
-      <ScrollButton />
+      {currentCourses ? (
+        <>
+          <TitleS>Current Courses</TitleS>
+          <CoursesList currentCourses={currentCourses} />
+        </>
+      ) : (
+        <Loader
+          ariaLabel={'ThreeDots'}
+          height={100}
+          width={100}
+          radius={5}
+          color={colors.main}
+        />
+      )}
+      <ScrollTopButton />
     </>
   );
 };

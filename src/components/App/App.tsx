@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { colors } from '../../utils/colors';
 import Container from '../Container/Container';
 import Loader from '../Loader/Loader';
 
@@ -13,11 +14,8 @@ const CoursePage = lazy(
       '../../views/CoursePage/CoursePage' /* webpackChunkName: "CoursePage" */
     ),
 );
-const LessonPage = lazy(
-  () =>
-    import(
-      '../../views/LessonPage/LessonPage' /* webpackChunkName: "LessonPage" */
-    ),
+const LessonItem = lazy(
+  () => import('../LessonItem/LessonItem' /* webpackChunkName: "LessonItem" */),
 );
 
 const App: React.FC = () => {
@@ -30,14 +28,15 @@ const App: React.FC = () => {
             height={100}
             width={100}
             radius={5}
-            color={'#708db3'}
+            color={colors.main}
           />
         }
       >
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/courses/:id" element={<CoursePage />} />
-          <Route path="/courses/:id/lesson" element={<LessonPage />} />
+          <Route path="/courses/:id" element={<CoursePage />}>
+            <Route path="lesson" element={<LessonItem lesson={undefined} />} />
+          </Route>
         </Routes>
       </Suspense>
     </Container>

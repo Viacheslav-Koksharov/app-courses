@@ -1,16 +1,15 @@
 import styled from 'styled-components';
 
-const ContainerStyled = styled.div`
+const ContainerS = styled.div`
   position: relative;
   height: 100vh;
-  background-color: #f3f3f4;
 `;
 
-const SpinnerStyled = styled.div`
+const SpinnerS = styled.div`
   position: absolute;
-  top: 30%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -30%);
+  transform: translate(-50%, -50%);
 `;
 
-export { ContainerStyled, SpinnerStyled };
+export { ContainerS, SpinnerS };
