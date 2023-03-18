@@ -1,7 +1,6 @@
 import Hls from 'hls.js';
-import { useEffect, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CourseContext } from '../../context/CourseContextProvider';
 import { getCourseByID } from '../../services/api';
 import {
   ImageContainer,
@@ -14,39 +13,39 @@ import LessonsList from '../../components/LessonsList';
 
 const CoursePage = () => {
   const { id } = useParams();
-  const { oneCourse, setOneCourse } = useContext(CourseContext);
+  // const { lesson, setLesson } = useContext(LessonContext);
+  const [course, setCourse] = useState(null);
 
   useEffect(() => {
     async function getCurrentCourseByID() {
       const course = await getCourseByID(id);
-      setOneCourse(course);
+      setCourse(course);
     }
     getCurrentCourseByID();
-  }, [id, setOneCourse]);
-  console.log(oneCourse);
+  }, [id]);
+
   useEffect(() => {
-    if (window.Hls.isSupported() && oneCourse?.lessons[0]?.link) {
+    if (window.Hls.isSupported() && course?.lessons[0]?.link) {
       const video = document.getElementById('video');
       var hls = new Hls();
-      hls.loadSource(oneCourse?.lessons[0]?.link);
+      hls.loadSource(course?.lessons[0]?.link);
       hls.attachMedia(video);
     }
-  }, [oneCourse?.lessons, oneCourse?.previewImageLink]);
-
+  }, [course?.lessons]);
   return (
     <>
-      <h2>{oneCourse?.title}</h2>
+      <h2>{course?.title}</h2>
       <ImageContainer>
         <video id="video" width="100%" height="100%" controls></video>
       </ImageContainer>
-      <TextStyled>Description: {oneCourse?.description}</TextStyled>
+      <TextStyled>Description: {course?.description}</TextStyled>
       <SkillStyled>Skills:</SkillStyled>
       <SkillsList>
-        {oneCourse?.meta?.skills?.map(skill => (
+        {course?.meta?.skills?.map(skill => (
           <SkillItem key={skill}>{skill} </SkillItem>
         ))}
       </SkillsList>
-      {oneCourse && <LessonsList oneCourse={oneCourse} />}
+      {course && <LessonsList oneCourse={course} />}
     </>
   );
 };

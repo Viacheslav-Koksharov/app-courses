@@ -1,1 +1,1 @@
-export { default } from './LessonsList.jsx';
+export { default } from './LessonsList';

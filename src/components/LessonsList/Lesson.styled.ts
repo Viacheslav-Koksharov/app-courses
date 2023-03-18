@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+interface Props {
+  disable?: boolean;
+}
+
 const List = styled.ul`
 
     width: 100%;
@@ -20,6 +24,8 @@ const LinkItem = styled(Link)`
 :hover {
         transform: scale(1.005);
     }
+
+    pointer-events: ${(props: Props) => (props.disable ? 'none' : 'auto')};
 `;
 const ImageContainer = styled.div`
  width: 100%;

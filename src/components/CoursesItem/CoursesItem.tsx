@@ -18,7 +18,7 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
   const { courseVideoPreview, skills } = meta;
 
   useEffect(() => {
-    if (window.Hls.isSupported() && course?.meta?.courseVideoPreview?.link) {
+    if (window.Hls.isSupported() && courseVideoPreview?.link && courseVideoPreview?.duration) {
       const video = document.getElementById(
         `id-${previewImageLink}-${title}`,
       ) as HTMLMediaElement;
@@ -44,7 +44,7 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
     <ListItemS key={id}>
       <LinkItemS to={`/courses/${id}`}>
         <ImageContainerS>
-          {courseVideoPreview ? (
+          {courseVideoPreview.link && courseVideoPreview.duration ? (
             <video
               id={`id-${previewImageLink}-${title}`}
               width="100%"

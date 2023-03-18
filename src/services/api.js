@@ -3,46 +3,48 @@ import axios from 'axios';
 const BASE_URL = 'https://api.wisey.app/api/v1';
 
 const getToken = async () => {
-  const response = await axios.get(
-    `${BASE_URL}/auth/anonymous?platform=subscriptions`, {
-    mode: "no-cors"
-  }
-  );
-  const token = await response.data;
-
   try {
+    const response = await axios.get(
+      `${BASE_URL}/auth/anonymous?platform=subscriptions`,
+    );
+
+    const token = await response.data;
     localStorage.setItem('token', JSON.stringify(token));
     return token;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
-const getCourses = async (token) => {
+const getCourses = async token => {
   try {
-    const res = await axios.get(`${BASE_URL}/core/preview-courses`, {
+    const response = await axios.get(`${BASE_URL}/core/preview-courses`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return res.data;
+    return response.data;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
-const getCourseByID = async (courseId) => {
+const getCourseByID = async courseId => {
   try {
     const currentToken = JSON.parse(localStorage.getItem('token'));
-    const res = await axios.get(`${BASE_URL}/core/preview-courses/${courseId}`, {
-      headers: {
-        Authorization: `Bearer ${currentToken.token}`,
+    const response = await axios.get(
+      `${BASE_URL}/core/preview-courses/${courseId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${currentToken.token}`,
+        },
       },
-    });
-    return res.data;
+    );
+    return response.data;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
 export { getToken, getCourses, getCourseByID };
+

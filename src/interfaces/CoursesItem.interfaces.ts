@@ -1,8 +1,21 @@
+interface ILessonItem {
+    id?: string;
+    duration?: number;
+    link?: string;
+    order?: number;
+    meta?: null;
+    previewImageLink?: string;
+    status?: string;
+    title?: string;
+    type?: string;
+}
+
 interface ICoursesItem {
     id: string;
     title: string;
     tags: String[];
     launchDate: string;
+    lessons?: ILessonItem[];
     status: string;
     description: string;
     duration: string;
@@ -26,4 +39,4 @@ interface ICoursesItemComponentProps {
 
 }
 
-export type { ICoursesItemComponentProps, ICoursesItem };
+export type { ICoursesItemComponentProps, ICoursesItem, ILessonItem };

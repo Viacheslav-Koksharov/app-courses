@@ -4,8 +4,11 @@ import { IToken } from '../../interfaces/Token.interface';
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { colors } from '../../utils/colors';
+import site_unavailable from '../../images/site_unavailable.jpg';
+import route_unavailable from '../../images/route_unavailable.jpg';
 import Container from '../Container/Container';
 import Loader from '../Loader/Loader';
+import Error from '../Error';
 
 const Homepage = lazy(
   () =>
@@ -25,13 +28,19 @@ const LessonPage = lazy(
 );
 
 const App: React.FC = () => {
-  const [currentToken, setCurrentToken] = useState<IToken>();
+  const [token, setToken] = useState<IToken>();
   const [currentCourses, setCurrentCourses] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function getCurrentToken() {
-      const token = await getToken();
-      setCurrentToken(token);
+      const response = await getToken();
+
+      if (response.token) {
+        setToken(response.token);
+      } else {
+        setError(response.message);
+      }
     }
 
     getCurrentToken();
@@ -39,15 +48,19 @@ const App: React.FC = () => {
 
   useEffect(() => {
     async function getCurrentCourses() {
-      if (currentToken && currentToken.token) {
-        const { token } = currentToken;
-        const courses = await getCourses(token);
-        setCurrentCourses(courses);
+      if (token) {
+        const response = await getCourses(token);
+
+        if (response.message) {
+          setError(response.message);
+        } else {
+          setCurrentCourses(response);
+        }
       }
     }
 
     getCurrentCourses();
-  }, [currentToken]);
+  }, [token]);
 
   return (
     <Container>
@@ -62,15 +75,23 @@ const App: React.FC = () => {
           />
         }
       >
-        <Routes>
-          <Route
-            path="/"
-            element={<Homepage currentCourses={currentCourses} />}
-          />
-          <Route path="/courses/:id" element={<CoursePage />}>
-            <Route path="lesson" element={<LessonPage />} />
-          </Route>
-        </Routes>
+        {error ? (
+          <Error error={error} image={site_unavailable} />
+        ) : (
+          <Routes>
+            <Route
+              path="/"
+              element={<Homepage currentCourses={currentCourses} />}
+            />
+            <Route path="/courses/:id" element={<CoursePage />}>
+              <Route path="lesson" element={<LessonPage />} />
+            </Route>
+            <Route
+              path="*"
+              element={<Error image={route_unavailable} route />}
+            />
+          </Routes>
+        )}
       </Suspense>
     </Container>
   );

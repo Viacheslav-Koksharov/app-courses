@@ -1,4 +1,4 @@
-import img_unavailableVideo from '../images/error_unavailableVideo.png';
+import video_unavailable from '../images/video_unavailable.png';
 
 const onHoverElement = (element, sourceAttr = '') => {
   let start;
@@ -7,7 +7,7 @@ const onHoverElement = (element, sourceAttr = '') => {
     if (element.play && typeof element.play === 'function') {
       element.play();
     } else {
-      element.src = img_unavailableVideo;
+      element.src = video_unavailable;
     }
   };
 

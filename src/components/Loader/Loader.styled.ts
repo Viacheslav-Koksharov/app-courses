@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+import { secondary } from '../../utils/breakpoints';
+
+const { desktop } = secondary;
 
 const ContainerS = styled.div`
   position: relative;
@@ -7,9 +10,15 @@ const ContainerS = styled.div`
 
 const SpinnerS = styled.div`
   position: absolute;
-  top: 50%;
+  top: 20%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -20%);
+
+  @media screen and (min-width: ${desktop}px) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 export { ContainerS, SpinnerS };
