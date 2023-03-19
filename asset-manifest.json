@@ -1,28 +1,28 @@
 {
   "files": {
     "main.css": "/app-courses/static/css/main.401ec5b6.css",
-    "main.js": "/app-courses/static/js/main.6fd886f6.js",
+    "main.js": "/app-courses/static/js/main.7cbff57c.js",
     "HomePage.js": "/app-courses/static/js/HomePage.b3f6d2a8.chunk.js",
     "CoursePage.js": "/app-courses/static/js/CoursePage.164b926f.chunk.js",
     "LessonPage.js": "/app-courses/static/js/LessonPage.c09c6bcd.chunk.js",
     "static/js/843.2ea2c052.chunk.js": "/app-courses/static/js/843.2ea2c052.chunk.js",
     "static/js/185.77d55e63.chunk.js": "/app-courses/static/js/185.77d55e63.chunk.js",
-    "static/js/611.266894c4.chunk.js": "/app-courses/static/js/611.266894c4.chunk.js",
+    "static/js/611.d0ed84b9.chunk.js": "/app-courses/static/js/611.d0ed84b9.chunk.js",
     "static/media/video_unavailable.png": "/app-courses/static/media/video_unavailable.9c62b7f0311c482086c9.png",
     "static/media/route_unavailable.jpg": "/app-courses/static/media/route_unavailable.0a3dadc638e82c2ac2ca.jpg",
     "static/media/site_unavailable.jpg": "/app-courses/static/media/site_unavailable.493e33e1293fcda1bf4e.jpg",
     "index.html": "/app-courses/index.html",
     "main.401ec5b6.css.map": "/app-courses/static/css/main.401ec5b6.css.map",
-    "main.6fd886f6.js.map": "/app-courses/static/js/main.6fd886f6.js.map",
+    "main.7cbff57c.js.map": "/app-courses/static/js/main.7cbff57c.js.map",
     "HomePage.b3f6d2a8.chunk.js.map": "/app-courses/static/js/HomePage.b3f6d2a8.chunk.js.map",
     "CoursePage.164b926f.chunk.js.map": "/app-courses/static/js/CoursePage.164b926f.chunk.js.map",
     "LessonPage.c09c6bcd.chunk.js.map": "/app-courses/static/js/LessonPage.c09c6bcd.chunk.js.map",
     "843.2ea2c052.chunk.js.map": "/app-courses/static/js/843.2ea2c052.chunk.js.map",
     "185.77d55e63.chunk.js.map": "/app-courses/static/js/185.77d55e63.chunk.js.map",
-    "611.266894c4.chunk.js.map": "/app-courses/static/js/611.266894c4.chunk.js.map"
+    "611.d0ed84b9.chunk.js.map": "/app-courses/static/js/611.d0ed84b9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.401ec5b6.css",
-    "static/js/main.6fd886f6.js"
+    "static/js/main.7cbff57c.js"
   ]
 }
