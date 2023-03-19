@@ -8,6 +8,7 @@ import video_unavailable from '../../images/video_unavailable.png';
 import LessonsList from '../../components/LessonsList';
 import Loader from '../../components/Loader';
 import Error from '../../components/Error';
+
 import {
   TitleS,
   ImageContainerS,

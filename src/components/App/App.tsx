@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { getToken, getCourses } from '../../services/api';
 import { IToken } from '../../interfaces/Token.interface';
-import { Suspense, lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
 import { colors } from '../../utils/colors';
 import site_unavailable from '../../images/site_unavailable.jpg';
 import route_unavailable from '../../images/route_unavailable.jpg';

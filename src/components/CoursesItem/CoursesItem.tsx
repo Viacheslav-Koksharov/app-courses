@@ -1,5 +1,7 @@
 import Hls from 'hls.js';
 import { useEffect } from 'react';
+import Rating from '@mui/material/Rating';
+import Typography from '@mui/material/Typography';
 import { onHoverElement } from '../../helpers/hoverHelper';
 import { ICoursesItemComponentProps } from '../../interfaces/CoursesItem.interfaces';
 import {
@@ -71,7 +73,17 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
             <SkillsItemS key={skill}>{skill} </SkillsItemS>
           ))}
         </SkillsListS>
-        <TextS accent>Rating: {rating}</TextS>
+        <TextS accent>
+          Rating: {rating}
+          <Typography component="legend" />
+          <Rating
+            name="read-only"
+            value={rating}
+            precision={0.1}
+            size="small"
+            readOnly
+          />
+        </TextS>
       </LinkItemS>
     </ListItemS>
   );
