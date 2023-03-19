@@ -1,51 +1,38 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import styled from 'styled-components';
+import { colors } from '../../utils/colors';
 
-const List = styled.ul`
+const TitleS = styled.h1`
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 30px;
+`;
 
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    margin:0 ;
+const ImageContainerS = styled.div`
+  width: 60%;
+  height: 60%;
+  margin: 0 auto 20px;
 `;
-const ListItem = styled.li`
+
+const TextS = styled.p`
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: ${colors.accent};
 `;
-const LinkItem = styled(Link)`
+
+const SkillsListS = styled.ul`
   display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 5px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 1px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%), 0 1px 10px 0 rgb(0 0 0 / 12%);
-:hover {
-        transform: scale(1.005);
-    }
-`;
-const ImageContainer = styled.div`
- width: 100%;
-    height: 250px;
-    margin-bottom: 20px;
+  flex-wrap: wrap;
+  width: 90%;
+  margin: 0 auto 20px;
 `;
 
-const TextStyled = styled.p`
-margin: 0 0 15px 0;
-  font-size: 16px;
-`;
-const SkillsList = styled.ul`
-display: flex;
-    flex-wrap: wrap;
-`;
-const SkillStyled = styled.p`
-    margin: 0;
-    font-size: 16px;
-`;
 const SkillItem = styled.li`
-padding: 3px;
-    margin: 0 15px 15px 0;
-    font-size: 16px;
-    border: solid 1px black
+margin: 0 10px 0 0;
+  text-align: center;
+  font-size: 16px;
+  color: ${colors.main};
 `;
-export {
-  List, ListItem, ImageContainer, LinkItem,
-  TextStyled, SkillsList, SkillStyled, SkillItem
-};
+
+export { TitleS, ImageContainerS, TextS, SkillsListS, SkillItem };

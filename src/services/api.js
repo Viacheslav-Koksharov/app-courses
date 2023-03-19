@@ -47,4 +47,3 @@ const getCourseByID = async courseId => {
 };
 
 export { getToken, getCourses, getCourseByID };
-

@@ -1,6 +1,6 @@
 import { ContainerS, ImageContainerS, TitleS } from './Error.styled';
 
-const Error = ({ error=null, image='' , route=false}) => {
+const Error = ({ error = null, image = '', route = false }) => {
   return (
     <ContainerS>
       <ImageContainerS route>

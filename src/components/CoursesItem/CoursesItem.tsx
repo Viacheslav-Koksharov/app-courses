@@ -18,7 +18,11 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
   const { courseVideoPreview, skills } = meta;
 
   useEffect(() => {
-    if (window.Hls.isSupported() && courseVideoPreview?.link && courseVideoPreview?.duration) {
+    if (
+      window.Hls.isSupported() &&
+      courseVideoPreview?.link &&
+      courseVideoPreview?.duration
+    ) {
       const video = document.getElementById(
         `id-${previewImageLink}-${title}`,
       ) as HTMLMediaElement;
@@ -44,7 +48,7 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
     <ListItemS key={id}>
       <LinkItemS to={`/courses/${id}`}>
         <ImageContainerS>
-          {courseVideoPreview.link && courseVideoPreview.duration ? (
+          {courseVideoPreview?.link && courseVideoPreview?.duration ? (
             <video
               id={`id-${previewImageLink}-${title}`}
               width="100%"
@@ -60,7 +64,7 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
           )}
         </ImageContainerS>
         <TitleS>{title}</TitleS>
-        <TextS>Lessons: {lessonsCount}</TextS>
+        <TextS>Available lessons: {lessonsCount}</TextS>
         <SkillTitleS>Skills:</SkillTitleS>
         <SkillsListS>
           {skills?.map(skill => (

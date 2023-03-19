@@ -6,8 +6,8 @@ const { desktop } = secondary;
 const { accent } = colors;
 
 interface Props {
-    route?: boolean;
-  }
+  route?: boolean;
+}
 
 const ContainerS = styled.div`
   display: flex;

@@ -60,6 +60,7 @@ const SkillsListS = styled.ol`
 `;
 
 const SkillTitleS = styled.h3`
+  margin: 0 0 15px 0;
   align-self: flex-start;
   font-size: 18px;
 `;

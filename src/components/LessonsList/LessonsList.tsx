@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
-import { List, ListItem, LinkItem } from './Lesson.styled';
+import { ListS, ListItemS, LinkItemS } from './Lesson.styled';
 import { LessonContext } from '../../context/LessonContextProvider';
 
 const LessonsList = ({ oneCourse }) => {
@@ -19,17 +19,19 @@ const LessonsList = ({ oneCourse }) => {
 
   return (
     <>
-      <List>
+      <ListS>
         {lessons?.map(lesson => {
           return (
-            <ListItem key={lesson.order} onClick={e => showVideo(e, lesson)}>
-              <LinkItem to={`lesson`}>
-                Lesson{lesson.order}. {lesson.title}
-              </LinkItem>
-            </ListItem>
+            <ListItemS key={lesson.order} onClick={e => showVideo(e, lesson)}>
+              <LinkItemS to={`lesson`}>
+                <b>Lesson {lesson.order}.</b>
+                <br />
+                {lesson.title}
+              </LinkItemS>
+            </ListItemS>
           );
         })}
-      </List>
+      </ListS>
       <Outlet />
     </>
   );
