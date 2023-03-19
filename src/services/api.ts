@@ -31,16 +31,19 @@ const getCourses = async token => {
 
 const getCourseByID = async courseId => {
   try {
-    const currentToken = JSON.parse(localStorage.getItem('token'));
-    const response = await axios.get(
-      `${BASE_URL}/core/preview-courses/${courseId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${currentToken.token}`,
+    const token = localStorage.getItem('token')
+    if (token) {
+      const currentToken = JSON.parse(token);
+      const response = await axios.get(
+        `${BASE_URL}/core/preview-courses/${courseId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${currentToken.token}`,
+          },
         },
-      },
-    );
-    return response.data;
+      );
+      return response.data;
+    }
   } catch (error) {
     return error;
   }

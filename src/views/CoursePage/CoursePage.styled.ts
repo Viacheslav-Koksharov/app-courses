@@ -29,7 +29,7 @@ const SkillsListS = styled.ul`
 `;
 
 const SkillItem = styled.li`
-margin: 0 10px 0 0;
+  margin: 0 10px 0 0;
   text-align: center;
   font-size: 16px;
   color: ${colors.main};
