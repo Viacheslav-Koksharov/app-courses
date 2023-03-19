@@ -2,6 +2,7 @@ import Hls from 'hls.js';
 import { useEffect, useContext, useState } from 'react';
 import { LessonContext } from '../../context/LessonContextProvider';
 import ScrollTopButton from '../../components/ScrollTopButton';
+import video_unavailable from '../../images/video_unavailable.png';
 import { TitleS, TextS, ImageContainerS } from './LessonPage.styled';
 
 const LessonPage = () => {
@@ -24,8 +25,9 @@ const LessonPage = () => {
       hls.loadSource(lesson?.link);
       hls.attachMedia(video);
     }
+
     scrollToVideo();
-  }, [lesson?.link]);
+  }, [lesson, lesson?.link]);
 
   useEffect(() => {
     if (currentTime.length > 0 && !isPlay) {
@@ -77,12 +79,16 @@ const LessonPage = () => {
           <TitleS id="lesson-title">Lesson {lesson?.order}</TitleS>
           <TextS>{lesson?.title}</TextS>
           <ImageContainerS onTimeUpdate={getIsPlay}>
-            <video
-              id={`${lesson?.link}`}
-              width="100%"
-              height="100%"
-              controls
-            ></video>
+            {lesson?.link && lesson?.duration ? (
+              <video
+                id={`${lesson?.link}`}
+                width="100%"
+                height="100%"
+                controls
+              ></video>
+            ) : (
+              <img src={video_unavailable} alt="banner" />
+            )}
           </ImageContainerS>
           <ScrollTopButton />
         </>
