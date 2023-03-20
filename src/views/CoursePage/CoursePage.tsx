@@ -1,5 +1,5 @@
 import Hls from 'hls.js';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCourseByID } from '../../services/api';
 import { colors } from '../../utils/colors';
@@ -8,6 +8,7 @@ import video_unavailable from '../../images/video_unavailable.png';
 import LessonsList from '../../components/LessonsList';
 import Loader from '../../components/Loader';
 import Error from '../../components/Error';
+import { ICoursesItem } from '../../interfaces/CoursesItem.interfaces';
 import {
   TitleS,
   ImageContainerS,
@@ -17,38 +18,34 @@ import {
 } from './CoursePage.styled';
 
 const CoursePage = () => {
-  const [course, setCourse] = useState(null);
+  const [course, setCourse] = useState<ICoursesItem>();
   const [error, setError] = useState(null);
   const { id } = useParams();
-  const ref = useRef(true);
 
   useEffect(() => {
-    if (!ref.current) {
-      async function getCurrentCourseByID() {
-        const response = await getCourseByID(id);
+    async function getCurrentCourseByID() {
+      const response = await getCourseByID(id);
 
-        if (response.message) {
-          setError(response.message);
-        } else {
-          setCourse(response);
-        }
+      if (response.message) {
+        setError(response.message);
+      } else {
+        setCourse(response);
       }
-
-      getCurrentCourseByID();
     }
 
-    ref.current = false;
+    getCurrentCourseByID();
     scrollToTop();
   }, [id]);
 
+  let firstLesson = course?.lessons![0];
   useEffect(() => {
-    if (window.Hls.isSupported() && course?.lessons[0]?.link) {
-      const video = document.getElementById('video');
+    if (window.Hls.isSupported() && firstLesson?.link) {
+      const video = document.getElementById('video') as HTMLMediaElement;
       let hls = new Hls();
-      hls.loadSource(course?.lessons[0]?.link);
+      hls.loadSource(firstLesson?.link);
       hls.attachMedia(video);
     }
-  }, [course?.lessons]);
+  }, [course?.lessons, firstLesson?.link]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -64,10 +61,10 @@ const CoursePage = () => {
       ) : (
         <>
           {course ? (
-            <div ref={ref}>
+            <>
               <TitleS>Course: {course?.title}</TitleS>
               <ImageContainerS>
-                {course?.lessons[0]?.link && course?.lessons[0]?.duration ? (
+                {firstLesson?.link && firstLesson?.duration ? (
                   <video id="video" width="100%" height="100%" controls></video>
                 ) : (
                   <img src={video_unavailable} alt="banner" />
@@ -80,7 +77,7 @@ const CoursePage = () => {
                 ))}
               </SkillsListS>
               <LessonsList oneCourse={course} />
-            </div>
+            </>
           ) : (
             <Loader
               ariaLabel={'ThreeDots'}
