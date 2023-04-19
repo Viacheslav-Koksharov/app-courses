@@ -1,4 +1,4 @@
-import video_unavailable from '../images/video_unavailable.png';
+import video_unavailable from 'images/video_unavailable.png';
 
 const onHoverElement = (element, sourceAttr = '') => {
   let start: NodeJS.Timeout;

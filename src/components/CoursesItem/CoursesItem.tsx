@@ -1,19 +1,19 @@
-import Hls from 'hls.js';
 import { useEffect, useRef } from 'react';
+import Hls from 'hls.js';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-import { onHoverElement } from '../../helpers/hoverHelper';
-import { ICoursesItemComponentProps } from '../../interfaces/CoursesItem.interfaces';
+import { onHoverElement } from 'helpers/hoverHelper';
+import { ICoursesItemComponentProps } from 'interfaces/CoursesItem.interfaces';
 import {
-  ListItemS,
-  LinkItemS,
-  ImageContainerS,
-  TitleS,
-  TextS,
-  SkillsListS,
-  SkillTitleS,
-  SkillsItemS,
-} from './CoursesItem.styled';
+  ListItemStyles,
+  LinkItemStyles,
+  ImageContainerStyles,
+  TitleStyles,
+  TextStyles,
+  SkillsTitleStyles,
+  SkillsListStyles,
+  SkillsItemStyles,
+} from 'components/CoursesItem/CoursesItem.styled';
 
 const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -49,9 +49,9 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
   }, [previewImageLink]);
 
   return (
-    <ListItemS key={id}>
-      <LinkItemS to={`/courses/${id}`}>
-        <ImageContainerS>
+    <ListItemStyles key={id}>
+      <LinkItemStyles to={`/courses/${id}`}>
+        <ImageContainerStyles>
           {courseVideoPreview?.link && courseVideoPreview?.duration ? (
             <video ref={videoRef} width="100%" height="100%" muted />
           ) : (
@@ -61,16 +61,16 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
               alt="banner"
             />
           )}
-        </ImageContainerS>
-        <TitleS>{title}</TitleS>
-        <TextS>Available lessons: {lessonsCount}</TextS>
-        <SkillTitleS>Skills:</SkillTitleS>
-        <SkillsListS>
+        </ImageContainerStyles>
+        <TitleStyles>{title}</TitleStyles>
+        <TextStyles>Available lessons: {lessonsCount}</TextStyles>
+        <SkillsTitleStyles>Skills:</SkillsTitleStyles>
+        <SkillsListStyles>
           {skills?.map(skill => (
-            <SkillsItemS key={skill}>{skill} </SkillsItemS>
+            <SkillsItemStyles key={skill}>{skill}</SkillsItemStyles>
           ))}
-        </SkillsListS>
-        <TextS accent>
+        </SkillsListStyles>
+        <TextStyles accent>
           Rating: {rating}
           <Typography component="legend" />
           <Rating
@@ -80,9 +80,9 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
             size="small"
             readOnly
           />
-        </TextS>
-      </LinkItemS>
-    </ListItemS>
+        </TextStyles>
+      </LinkItemStyles>
+    </ListItemStyles>
   );
 };
 

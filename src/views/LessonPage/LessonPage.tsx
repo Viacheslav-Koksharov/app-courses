@@ -1,9 +1,13 @@
-import Hls from 'hls.js';
 import { useEffect, useContext, useState, useRef } from 'react';
-import { LessonContext } from '../../context/LessonContextProvider';
-import ScrollTopButton from '../../components/ScrollTopButton';
-import video_unavailable from '../../images/video_unavailable.png';
-import { TitleS, TextS, ImageContainerS } from './LessonPage.styled';
+import Hls from 'hls.js';
+import ScrollTopButton from 'components/ScrollTopButton';
+import video_unavailable from 'images/video_unavailable.png';
+import { LessonContext } from 'context/LessonContextProvider';
+import {
+  TitleStyles,
+  TextStyles,
+  ImageContainerStyles,
+} from 'views/LessonPage/LessonPage.styled';
 
 const LessonPage = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -77,15 +81,15 @@ const LessonPage = () => {
     <>
       {lesson && (
         <>
-          <TitleS ref={titleRef}>Lesson {lesson?.order}</TitleS>
-          <TextS>{lesson?.title}</TextS>
-          <ImageContainerS onTimeUpdate={getIsPlay}>
+          <TitleStyles ref={titleRef}>Lesson {lesson?.order}</TitleStyles>
+          <TextStyles>{lesson?.title}</TextStyles>
+          <ImageContainerStyles onTimeUpdate={getIsPlay}>
             {lesson?.link && lesson?.duration ? (
               <video ref={videoRef} width="100%" height="100%" controls />
             ) : (
               <img src={video_unavailable} alt="banner" />
             )}
-          </ImageContainerS>
+          </ImageContainerStyles>
           <ScrollTopButton />
         </>
       )}

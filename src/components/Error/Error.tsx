@@ -1,13 +1,17 @@
-import { ContainerS, ImageContainerS, TitleS } from './Error.styled';
+import {
+  ContainerStyles,
+  ImageContainerStyles,
+  TitleStyles,
+} from 'components/Error/Error.styled';
 
 const Error = ({ error = null, image = '', route = false }) => {
   return (
-    <ContainerS>
-      <ImageContainerS route>
+    <ContainerStyles>
+      <ImageContainerStyles route>
         <img src={image} alt="the site is unavailable"></img>
-      </ImageContainerS>
-      {error && <TitleS>{error}</TitleS>}
-    </ContainerS>
+      </ImageContainerStyles>
+      {error && <TitleStyles>{error}</TitleStyles>}
+    </ContainerStyles>
   );
 };
 

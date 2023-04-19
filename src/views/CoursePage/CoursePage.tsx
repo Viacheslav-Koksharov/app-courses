@@ -1,41 +1,38 @@
-import Hls from 'hls.js';
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { getCourseByID } from '../../services/api';
-import { colors } from '../../utils/colors';
-import site_unavailable from '../../images/site_unavailable.jpg';
-import video_unavailable from '../../images/video_unavailable.png';
-import LessonsList from '../../components/LessonsList';
-import Loader from '../../components/Loader';
-import Error from '../../components/Error';
-import { ICoursesItem } from '../../interfaces/CoursesItem.interfaces';
+import Hls from 'hls.js';
+import LessonsList from 'components/LessonsList';
+import Loader from 'components/Loader';
+import Error from 'components/Error';
+import site_unavailable from 'images/site_unavailable.jpg';
+import video_unavailable from 'images/video_unavailable.png';
+import { getCourseByID } from 'services/api';
+import { colors } from 'utils/colors';
+import { ICoursesItem } from 'interfaces/CoursesItem.interfaces';
 import {
-  TitleS,
-  ImageContainerS,
-  TextS,
-  SkillsListS,
-  SkillItem,
-} from './CoursePage.styled';
+  TitleStyles,
+  ImageContainerStyles,
+  TextStyles,
+  SkillsListStyles,
+  SkillItemStyles,
+} from 'views/CoursePage/CoursePage.styled';
 
 const CoursePage = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [course, setCourse] = useState<ICoursesItem>();
   const [error, setError] = useState(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { id } = useParams();
-  let firstLesson = course?.lessons![0];
+  const firstLesson = course?.lessons![0];
 
   useEffect(() => {
-    async function getCurrentCourseByID() {
-      const response = await getCourseByID(id);
-
+    getCourseByID(id).then(response => {
       if (response.message) {
         setError(response.message);
       } else {
         setCourse(response);
       }
-    }
+    });
 
-    getCurrentCourseByID();
     scrollToTop();
   }, [id]);
 
@@ -66,20 +63,20 @@ const CoursePage = () => {
         <>
           {course ? (
             <>
-              <TitleS>Course: {course?.title}</TitleS>
-              <ImageContainerS>
+              <TitleStyles>Course: {course?.title}</TitleStyles>
+              <ImageContainerStyles>
                 {firstLesson?.link && firstLesson?.duration ? (
                   <video ref={videoRef} width="100%" height="100%" controls />
                 ) : (
                   <img src={video_unavailable} alt="banner" />
                 )}
-              </ImageContainerS>
-              <TextS>Description: {course?.description}</TextS>
-              <SkillsListS>
+              </ImageContainerStyles>
+              <TextStyles>Description: {course?.description}</TextStyles>
+              <SkillsListStyles>
                 {course?.meta?.skills?.map(skill => (
-                  <SkillItem key={skill}>#{skill}</SkillItem>
+                  <SkillItemStyles key={skill}>#{skill}</SkillItemStyles>
                 ))}
-              </SkillsListS>
+              </SkillsListStyles>
               <LessonsList oneCourse={course} />
             </>
           ) : (

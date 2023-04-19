@@ -1,19 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsArrowUpSquareFill } from 'react-icons/bs';
-import { ButtonS } from './ScrollTopButton.styled';
+import { ButtonStyles } from 'components/ScrollTopButton/ScrollTopButton.styled';
 
 const ScrollButton = () => {
   const [visible, setVisible] = useState(false);
 
-  const toggleVisible = () => {
-    const scrolled = document.documentElement.scrollTop;
+  useEffect(() => {
+    const toggleVisible = () => {
+      const scrolled = document.documentElement.scrollTop;
 
-    if (scrolled > 300) {
-      setVisible(true);
-    } else if (scrolled <= 300) {
-      setVisible(false);
-    }
-  };
+      if (scrolled > 300) {
+        setVisible(true);
+      } else if (scrolled <= 300) {
+        setVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', toggleVisible);
+
+    return () => {
+      window.removeEventListener('scroll', toggleVisible);
+    };
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -22,15 +30,13 @@ const ScrollButton = () => {
     });
   };
 
-  window.addEventListener('scroll', toggleVisible);
-
   return (
-    <ButtonS>
+    <ButtonStyles>
       <BsArrowUpSquareFill
         onClick={scrollToTop}
         style={{ display: visible ? 'inline' : 'none' }}
       />
-    </ButtonS>
+    </ButtonStyles>
   );
 };
 

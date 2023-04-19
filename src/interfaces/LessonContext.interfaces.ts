@@ -1,4 +1,4 @@
-import { ILessonItem } from './CoursesItem.interfaces';
+import { ILessonItem } from 'interfaces/CoursesItem.interfaces';
 
 interface ILessonContext {
   lesson: ILessonItem | undefined;

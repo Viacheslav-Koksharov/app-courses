@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {
-  ListS,
-  ListItemS,
-  LinkItemS,
-} from 'components/LessonsList/Lesson.styled';
 import { LessonContext } from 'context/LessonContextProvider';
+import {
+  ListStyles,
+  ListItemStyles,
+  LinkItemStyles,
+} from 'components/LessonsList/Lesson.styled';
 
 const LessonsList = ({ oneCourse }) => {
   const { setLesson } = useContext(LessonContext);
@@ -28,20 +28,20 @@ const LessonsList = ({ oneCourse }) => {
 
   return (
     <>
-      <ListS>
+      <ListStyles>
         {lessons?.map(lesson => {
           const { id, order, title } = lesson;
           return (
-            <ListItemS key={id} onClick={e => showVideo(e, lesson)}>
-              <LinkItemS to={'lesson'}>
+            <ListItemStyles key={id} onClick={e => showVideo(e, lesson)}>
+              <LinkItemStyles to={'lesson'}>
                 <b>Lesson {order}.</b>
                 <br />
                 {title}
-              </LinkItemS>
-            </ListItemS>
+              </LinkItemStyles>
+            </ListItemStyles>
           );
         })}
-      </ListS>
+      </ListStyles>
       <Outlet />
     </>
   );
