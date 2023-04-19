@@ -1,5 +1,5 @@
 import Hls from 'hls.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCourseByID } from '../../services/api';
 import { colors } from '../../utils/colors';
@@ -18,9 +18,11 @@ import {
 } from './CoursePage.styled';
 
 const CoursePage = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [course, setCourse] = useState<ICoursesItem>();
   const [error, setError] = useState(null);
   const { id } = useParams();
+  let firstLesson = course?.lessons![0];
 
   useEffect(() => {
     async function getCurrentCourseByID() {
@@ -37,13 +39,15 @@ const CoursePage = () => {
     scrollToTop();
   }, [id]);
 
-  let firstLesson = course?.lessons![0];
   useEffect(() => {
     if (window.Hls.isSupported() && firstLesson?.link) {
-      const video = document.getElementById('video') as HTMLMediaElement;
-      let hls = new Hls();
-      hls.loadSource(firstLesson?.link);
-      hls.attachMedia(video);
+      const video = videoRef.current as HTMLMediaElement;
+
+      if (video) {
+        const hls = new Hls();
+        hls.loadSource(firstLesson?.link);
+        hls.attachMedia(video);
+      }
     }
   }, [course?.lessons, firstLesson?.link]);
 
@@ -65,7 +69,7 @@ const CoursePage = () => {
               <TitleS>Course: {course?.title}</TitleS>
               <ImageContainerS>
                 {firstLesson?.link && firstLesson?.duration ? (
-                  <video id="video" width="100%" height="100%" controls></video>
+                  <video ref={videoRef} width="100%" height="100%" controls />
                 ) : (
                   <img src={video_unavailable} alt="banner" />
                 )}

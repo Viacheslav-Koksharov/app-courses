@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 import { getToken, getCourses } from '../../services/api';
 import { IToken } from '../../interfaces/Token.interface';
 import { Suspense, lazy } from 'react';
@@ -93,6 +95,7 @@ const App: React.FC = () => {
           </Routes>
         )}
       </Suspense>
+      <ToastContainer />
     </Container>
   );
 };

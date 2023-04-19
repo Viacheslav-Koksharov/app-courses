@@ -1,11 +1,13 @@
 import Hls from 'hls.js';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext, useState, useRef } from 'react';
 import { LessonContext } from '../../context/LessonContextProvider';
 import ScrollTopButton from '../../components/ScrollTopButton';
 import video_unavailable from '../../images/video_unavailable.png';
 import { TitleS, TextS, ImageContainerS } from './LessonPage.styled';
 
 const LessonPage = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const { lesson } = useContext(LessonContext);
   const [video, setVideo] = useState<HTMLMediaElement>();
   const [currentTime, setCurrentTime] = useState(() => {
@@ -15,15 +17,14 @@ const LessonPage = () => {
 
   useEffect(() => {
     if (window.Hls.isSupported() && lesson?.link) {
-      const video = document.getElementById(
-        `${lesson?.link}`,
-      ) as HTMLMediaElement;
+      const video = videoRef.current as HTMLMediaElement;
+      if (video) {
+        setVideo(video);
 
-      setVideo(video);
-
-      var hls = new Hls();
-      hls.loadSource(lesson?.link);
-      hls.attachMedia(video);
+        const hls = new Hls();
+        hls.loadSource(lesson?.link);
+        hls.attachMedia(video);
+      }
     }
 
     scrollToVideo();
@@ -68,7 +69,7 @@ const LessonPage = () => {
   };
 
   const scrollToVideo = () => {
-    const title = document.getElementById('lesson-title') as HTMLElement;
+    const title = titleRef.current;
     title?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -76,16 +77,11 @@ const LessonPage = () => {
     <>
       {lesson && (
         <>
-          <TitleS id="lesson-title">Lesson {lesson?.order}</TitleS>
+          <TitleS ref={titleRef}>Lesson {lesson?.order}</TitleS>
           <TextS>{lesson?.title}</TextS>
           <ImageContainerS onTimeUpdate={getIsPlay}>
             {lesson?.link && lesson?.duration ? (
-              <video
-                id={`${lesson?.link}`}
-                width="100%"
-                height="100%"
-                controls
-              ></video>
+              <video ref={videoRef} width="100%" height="100%" controls />
             ) : (
               <img src={video_unavailable} alt="banner" />
             )}

@@ -1,5 +1,5 @@
 import Hls from 'hls.js';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import { onHoverElement } from '../../helpers/hoverHelper';
@@ -16,6 +16,8 @@ import {
 } from './CoursesItem.styled';
 
 const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const { id, previewImageLink, meta, title, lessonsCount, rating } = course;
   const { courseVideoPreview, skills } = meta;
 
@@ -25,21 +27,21 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
       courseVideoPreview?.link &&
       courseVideoPreview?.duration
     ) {
-      const video = document.getElementById(
-        `id-${previewImageLink}-${title}`,
-      ) as HTMLMediaElement;
+      const video = videoRef.current as HTMLMediaElement;
+      if (video) {
+        video.setAttribute('poster', previewImageLink + '/cover.webp');
 
-      var hls = new Hls();
-      hls.loadSource(courseVideoPreview.link);
-      hls.attachMedia(video);
+        const hls = new Hls();
+        hls.loadSource(courseVideoPreview.link);
+        hls.attachMedia(video);
 
-      video.setAttribute('poster', previewImageLink + '/cover.webp');
-      onHoverElement(video);
+        onHoverElement(video);
+      }
     }
-  }, [course, courseVideoPreview, previewImageLink, title]);
+  }, [course, courseVideoPreview, previewImageLink]);
 
   useEffect(() => {
-    const image = document.getElementById(`unavailable-${previewImageLink}`);
+    const image = imageRef.current;
 
     if (image) {
       onHoverElement(image, `${previewImageLink + '/cover.webp'}`);
@@ -51,15 +53,10 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
       <LinkItemS to={`/courses/${id}`}>
         <ImageContainerS>
           {courseVideoPreview?.link && courseVideoPreview?.duration ? (
-            <video
-              id={`id-${previewImageLink}-${title}`}
-              width="100%"
-              height="100%"
-              muted
-            ></video>
+            <video ref={videoRef} width="100%" height="100%" muted />
           ) : (
             <img
-              id={`unavailable-${previewImageLink}`}
+              ref={imageRef}
               src={previewImageLink + '/cover.webp'}
               alt="banner"
             />
