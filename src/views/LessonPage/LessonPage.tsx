@@ -18,21 +18,25 @@ const LessonPage = () => {
     return JSON.parse(window.localStorage.getItem('time')!) ?? [];
   });
   const [isPlay, setIsPlay] = useState(false);
+  const hlsIsSupported = window.Hls.isSupported();
+  const lessonLink = lesson?.link;
+  const lessonDuration = lesson?.duration;
 
   useEffect(() => {
-    if (window.Hls.isSupported() && lesson?.link) {
+    if (hlsIsSupported && lessonLink) {
       const video = videoRef.current as HTMLMediaElement;
+
       if (video) {
         setVideo(video);
 
         const hls = new Hls();
-        hls.loadSource(lesson?.link);
+        hls.loadSource(lessonLink);
         hls.attachMedia(video);
       }
     }
 
     scrollToVideo();
-  }, [lesson, lesson?.link]);
+  }, [hlsIsSupported, lesson, lessonLink]);
 
   useEffect(() => {
     if (currentTime.length > 0 && !isPlay) {
@@ -40,7 +44,7 @@ const LessonPage = () => {
     }
   }, [currentTime, isPlay]);
 
-  const getIsPlay = () => {
+  const handlePlayVideo = () => {
     if (video) {
       if (!video.paused) {
         video.addEventListener('play', () => {
@@ -83,11 +87,11 @@ const LessonPage = () => {
         <>
           <TitleStyles ref={titleRef}>Lesson {lesson?.order}</TitleStyles>
           <TextStyles>{lesson?.title}</TextStyles>
-          <ImageContainerStyles onTimeUpdate={getIsPlay}>
-            {lesson?.link && lesson?.duration ? (
-              <video ref={videoRef} width="100%" height="100%" controls />
+          <ImageContainerStyles onTimeUpdate={handlePlayVideo}>
+            {lessonLink && lessonDuration ? (
+              <video ref={videoRef} width='100%' height='100%' controls />
             ) : (
-              <img src={video_unavailable} alt="banner" />
+              <img src={video_unavailable} alt='banner' />
             )}
           </ImageContainerStyles>
           <ScrollTopButton />

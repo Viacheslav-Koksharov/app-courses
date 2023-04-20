@@ -23,6 +23,10 @@ const CoursePage = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { id } = useParams();
   const firstLesson = course?.lessons![0];
+  const { main } = colors;
+  const hlsIsSupported = window.Hls.isSupported();
+  const firstLessonLink = firstLesson?.link;
+  const firstLessonDuration = firstLesson?.duration;
 
   useEffect(() => {
     getCourseByID(id).then(response => {
@@ -37,16 +41,16 @@ const CoursePage = () => {
   }, [id]);
 
   useEffect(() => {
-    if (window.Hls.isSupported() && firstLesson?.link) {
+    if (hlsIsSupported && firstLessonLink) {
       const video = videoRef.current as HTMLMediaElement;
 
       if (video) {
         const hls = new Hls();
-        hls.loadSource(firstLesson?.link);
+        hls.loadSource(firstLessonLink);
         hls.attachMedia(video);
       }
     }
-  }, [course?.lessons, firstLesson?.link]);
+  }, [hlsIsSupported, course?.lessons, firstLessonLink]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -55,42 +59,37 @@ const CoursePage = () => {
     });
   };
 
-  return (
-    <>
-      {error ? (
-        <Error error={error} image={site_unavailable} />
-      ) : (
-        <>
-          {course ? (
-            <>
-              <TitleStyles>Course: {course?.title}</TitleStyles>
-              <ImageContainerStyles>
-                {firstLesson?.link && firstLesson?.duration ? (
-                  <video ref={videoRef} width="100%" height="100%" controls />
-                ) : (
-                  <img src={video_unavailable} alt="banner" />
-                )}
-              </ImageContainerStyles>
-              <TextStyles>Description: {course?.description}</TextStyles>
-              <SkillsListStyles>
-                {course?.meta?.skills?.map(skill => (
-                  <SkillItemStyles key={skill}>#{skill}</SkillItemStyles>
-                ))}
-              </SkillsListStyles>
-              <LessonsList oneCourse={course} />
-            </>
+  if (error) return <Error error={error} image={site_unavailable} />;
+
+  if (course)
+    return (
+      <>
+        <TitleStyles>Course: {course?.title}</TitleStyles>
+        <ImageContainerStyles>
+          {firstLessonLink && firstLessonDuration ? (
+            <video ref={videoRef} width='100%' height='100%' controls />
           ) : (
-            <Loader
-              ariaLabel={'ThreeDots'}
-              height={100}
-              width={100}
-              radius={5}
-              color={colors.main}
-            />
+            <img src={video_unavailable} alt='banner' />
           )}
-        </>
-      )}
-    </>
+        </ImageContainerStyles>
+        <TextStyles>Description: {course?.description}</TextStyles>
+        <SkillsListStyles>
+          {course?.meta?.skills?.map(skill => (
+            <SkillItemStyles key={skill}>#{skill}</SkillItemStyles>
+          ))}
+        </SkillsListStyles>
+        <LessonsList oneCourse={course} />
+      </>
+    );
+
+  return (
+    <Loader
+      ariaLabel={'ThreeDots'}
+      height={100}
+      width={100}
+      radius={5}
+      color={main}
+    />
   );
 };
 

@@ -20,25 +20,25 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const { id, previewImageLink, meta, title, lessonsCount, rating } = course;
   const { courseVideoPreview, skills } = meta;
+  const hlsIsSupported = window.Hls.isSupported();
+  const videoLink = courseVideoPreview?.link;
+  const videoDuration = courseVideoPreview?.duration;
 
   useEffect(() => {
-    if (
-      window.Hls.isSupported() &&
-      courseVideoPreview?.link &&
-      courseVideoPreview?.duration
-    ) {
+    if (hlsIsSupported && videoLink && videoDuration) {
       const video = videoRef.current as HTMLMediaElement;
+
       if (video) {
         video.setAttribute('poster', previewImageLink + '/cover.webp');
 
         const hls = new Hls();
-        hls.loadSource(courseVideoPreview.link);
+        hls.loadSource(videoLink);
         hls.attachMedia(video);
 
         onHoverElement(video);
       }
     }
-  }, [course, courseVideoPreview, previewImageLink]);
+  }, [course, hlsIsSupported, videoLink, videoDuration, previewImageLink]);
 
   useEffect(() => {
     const image = imageRef.current;
@@ -52,13 +52,13 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
     <ListItemStyles key={id}>
       <LinkItemStyles to={`/courses/${id}`}>
         <ImageContainerStyles>
-          {courseVideoPreview?.link && courseVideoPreview?.duration ? (
-            <video ref={videoRef} width="100%" height="100%" muted />
+          {videoLink && videoDuration ? (
+            <video ref={videoRef} width='100%' height='100%' muted />
           ) : (
             <img
               ref={imageRef}
               src={previewImageLink + '/cover.webp'}
-              alt="banner"
+              alt='banner'
             />
           )}
         </ImageContainerStyles>
@@ -72,12 +72,12 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
         </SkillsListStyles>
         <TextStyles accent>
           Rating: {rating}
-          <Typography component="legend" />
+          <Typography component='legend' />
           <Rating
-            name="read-only"
+            name='read-only'
             value={rating}
             precision={0.1}
-            size="small"
+            size='small'
             readOnly
           />
         </TextStyles>

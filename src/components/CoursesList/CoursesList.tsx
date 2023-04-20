@@ -34,16 +34,16 @@ const CoursesList = ({ allCourses }) => {
     <>
       <ListStyles>
         {pagination.currentData().map(course => (
-          <CoursesItem key={course.id} course={course}></CoursesItem>
+          <CoursesItem key={course.id} course={course} />
         ))}
       </ListStyles>
       <Stack spacing={2}>
         <PaginationStyles
           count={count}
-          size="large"
+          size='large'
           page={page}
-          variant="outlined"
-          shape="rounded"
+          variant='outlined'
+          shape='rounded'
           onChange={handleChange}
         />
       </Stack>

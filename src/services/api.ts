@@ -31,7 +31,7 @@ const getCourses = async token => {
 
 const getCourseByID = async courseId => {
   try {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     if (token) {
       const currentToken = JSON.parse(token);
       const response = await axios.get(

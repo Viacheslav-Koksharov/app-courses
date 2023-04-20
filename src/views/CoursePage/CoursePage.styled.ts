@@ -37,4 +37,10 @@ const SkillItemStyles = styled.li`
   color: ${main};
 `;
 
-export { TitleStyles, ImageContainerStyles, TextStyles, SkillsListStyles, SkillItemStyles };
+export {
+  TitleStyles,
+  ImageContainerStyles,
+  TextStyles,
+  SkillsListStyles,
+  SkillItemStyles,
+};

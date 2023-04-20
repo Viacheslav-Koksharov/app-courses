@@ -5,24 +5,23 @@ import { colors } from 'utils/colors';
 import { TitleStyles } from 'views/HomePage/HomePage.styled';
 
 const HomePage = ({ allCourses }) => {
+  if (allCourses)
+    return (
+      <>
+        <TitleStyles>Current Courses</TitleStyles>
+        <CoursesList allCourses={allCourses} />
+        <ScrollTopButton />
+      </>
+    );
+
   return (
-    <>
-      {allCourses ? (
-        <>
-          <TitleStyles>Current Courses</TitleStyles>
-          <CoursesList allCourses={allCourses} />
-        </>
-      ) : (
-        <Loader
-          ariaLabel={'ThreeDots'}
-          height={100}
-          width={100}
-          radius={5}
-          color={colors.main}
-        />
-      )}
-      <ScrollTopButton />
-    </>
+    <Loader
+      ariaLabel={'ThreeDots'}
+      height={100}
+      width={100}
+      radius={5}
+      color={colors.main}
+    />
   );
 };
 

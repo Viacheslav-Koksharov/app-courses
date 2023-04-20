@@ -20,4 +20,3 @@ const ButtonStyles = styled.div`
 `;
 
 export { ButtonStyles };
-

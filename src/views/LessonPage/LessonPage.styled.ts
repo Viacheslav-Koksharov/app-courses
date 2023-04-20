@@ -23,4 +23,4 @@ const TextStyles = styled.p`
   font-weight: 600;
 `;
 
-export { TitleStyles, TextStyles, ImageContainerStyles };
+export { ImageContainerStyles, TitleStyles, TextStyles };
