@@ -6,6 +6,7 @@ import Loader from 'components/Loader';
 import Error from 'components/Error';
 import site_unavailable from 'images/site_unavailable.jpg';
 import video_unavailable from 'images/video_unavailable.png';
+import { IDLE, PENDING, RESOLVED, REJECTED } from 'helpers/Statuses';
 import { getCourseByID } from 'services/api';
 import { colors } from 'utils/colors';
 import { ICoursesItem } from 'interfaces/CoursesItem.interfaces';
@@ -20,6 +21,7 @@ import {
 const CoursePage = () => {
   const [course, setCourse] = useState<ICoursesItem>();
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState(IDLE);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { id } = useParams();
   const firstLesson = course?.lessons![0];
@@ -29,10 +31,14 @@ const CoursePage = () => {
   const firstLessonDuration = firstLesson?.duration;
 
   useEffect(() => {
+    setStatus(PENDING);
+
     getCourseByID(id).then(response => {
       if (response.message) {
+        setStatus(REJECTED);
         setError(response.message);
       } else {
+        setStatus(RESOLVED);
         setCourse(response);
       }
     });
@@ -59,9 +65,21 @@ const CoursePage = () => {
     });
   };
 
-  if (error) return <Error error={error} image={site_unavailable} />;
+  if (status === PENDING)
+    return (
+      <Loader
+        ariaLabel={'ThreeDots'}
+        height={100}
+        width={100}
+        radius={5}
+        color={main}
+      />
+    );
 
-  if (course)
+  if (status === REJECTED)
+    return <Error error={error} image={site_unavailable} />;
+
+  if (status === RESOLVED)
     return (
       <>
         <TitleStyles>Course: {course?.title}</TitleStyles>
@@ -82,15 +100,7 @@ const CoursePage = () => {
       </>
     );
 
-  return (
-    <Loader
-      ariaLabel={'ThreeDots'}
-      height={100}
-      width={100}
-      radius={5}
-      color={main}
-    />
-  );
+  return <></>;
 };
 
 export default CoursePage;
