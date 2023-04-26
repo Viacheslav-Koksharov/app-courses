@@ -1,5 +1,5 @@
 import { BallTriangle } from 'react-loader-spinner';
-import { ILoader } from 'interfaces/Loader.interfaces';
+import { ILoader } from 'interfaces/Loader.interface';
 import {
   ContainerStyles,
   SpinnerStyles,

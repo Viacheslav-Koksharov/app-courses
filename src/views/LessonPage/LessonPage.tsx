@@ -1,7 +1,11 @@
 import { useEffect, useContext, useState, useRef } from 'react';
-import Hls from 'hls.js';
+import Error from 'components/Error';
 import ScrollTopButton from 'components/ScrollTopButton';
 import video_unavailable from 'images/video_unavailable.png';
+import { HLS_IS_SUPPORTED } from 'helpers/constants';
+import { handleElementFormat } from 'helpers/formatHelper';
+import { handleScrollToElement } from 'helpers/scrollHelper';
+import { IDLE, RESOLVED, REJECTED } from 'helpers/constants';
 import { LessonContext } from 'context/LessonContextProvider';
 import {
   TitleStyles,
@@ -10,33 +14,44 @@ import {
 } from 'views/LessonPage/LessonPage.styled';
 
 const LessonPage = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
   const { lesson } = useContext(LessonContext);
+  const [status, setStatus] = useState(IDLE);
+  const [lessonLink, setLessonLink] = useState<string | undefined>(undefined);
+  const [lessonDuration, setLessonDuration] = useState<number | undefined>(
+    undefined,
+  );
   const [video, setVideo] = useState<HTMLMediaElement>();
   const [currentTime, setCurrentTime] = useState(() => {
     return JSON.parse(window.localStorage.getItem('time')!) ?? [];
   });
   const [isPlay, setIsPlay] = useState(false);
-  const hlsIsSupported = window.Hls.isSupported();
-  const lessonLink = lesson?.link;
-  const lessonDuration = lesson?.duration;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (hlsIsSupported && lessonLink) {
+    if (lesson) {
+      setStatus(RESOLVED);
+      setLessonLink(lesson?.link);
+      setLessonDuration(lesson?.duration);
+    }
+  }, [lesson]);
+
+  useEffect(() => {
+    const title = titleRef.current;
+
+    if (title) {
+      handleScrollToElement(title);
+    }
+
+    if (HLS_IS_SUPPORTED && lessonLink) {
       const video = videoRef.current as HTMLMediaElement;
 
       if (video) {
         setVideo(video);
-
-        const hls = new Hls();
-        hls.loadSource(lessonLink);
-        hls.attachMedia(video);
+        handleElementFormat(video, lessonLink);
       }
     }
-
-    scrollToVideo();
-  }, [hlsIsSupported, lesson, lessonLink]);
+  }, [lessonLink]);
 
   useEffect(() => {
     if (currentTime.length > 0 && !isPlay) {
@@ -44,11 +59,12 @@ const LessonPage = () => {
     }
   }, [currentTime, isPlay]);
 
-  const handlePlayVideo = () => {
+  const handleVideoTimeUpdate = () => {
     if (video) {
       if (!video.paused) {
         video.addEventListener('play', () => {
-          const currentEl = currentTime.find(item => item.id === video.id);
+          const currentEl = currentTime.find(({ id }) => id === video.id);
+
           if (currentEl) {
             video.currentTime = currentEl.time;
           }
@@ -58,7 +74,7 @@ const LessonPage = () => {
         return;
       }
 
-      const currentEl = currentTime.find(item => item.id === video.id);
+      const currentEl = currentTime.find(({ id }) => id === video.id);
 
       if (!currentEl) {
         setCurrentTime([
@@ -66,9 +82,9 @@ const LessonPage = () => {
           { id: video.id, time: video.currentTime },
         ]);
       } else {
-        currentTime.forEach(item => {
-          if (item.id === video.id && video.currentTime > 0) {
-            return (item.time = video.currentTime);
+        currentTime.forEach(({ id, time }) => {
+          if (id === video.id && video.currentTime > 0) {
+            return (time = video.currentTime);
           }
         });
       }
@@ -76,29 +92,25 @@ const LessonPage = () => {
     }
   };
 
-  const scrollToVideo = () => {
-    const title = titleRef.current;
-    title?.scrollIntoView({ behavior: 'smooth' });
-  };
+  if (status === REJECTED) return <Error image={video_unavailable} />;
 
-  return (
-    <>
-      {lesson && (
-        <>
-          <TitleStyles ref={titleRef}>Lesson {lesson?.order}</TitleStyles>
-          <TextStyles>{lesson?.title}</TextStyles>
-          <ImageContainerStyles onTimeUpdate={handlePlayVideo}>
-            {lessonLink && lessonDuration ? (
-              <video ref={videoRef} width='100%' height='100%' controls />
-            ) : (
-              <img src={video_unavailable} alt='banner' />
-            )}
-          </ImageContainerStyles>
-          <ScrollTopButton />
-        </>
-      )}
-    </>
-  );
+  if (status === RESOLVED)
+    return (
+      <>
+        <TitleStyles ref={titleRef}>Lesson {lesson?.order}</TitleStyles>
+        <TextStyles>{lesson?.title}</TextStyles>
+        <ImageContainerStyles onTimeUpdate={handleVideoTimeUpdate}>
+          {lessonLink && lessonDuration ? (
+            <video ref={videoRef} width='100%' height='100%' controls />
+          ) : (
+            <img src={video_unavailable} alt='banner' />
+          )}
+        </ImageContainerStyles>
+        <ScrollTopButton />
+      </>
+    );
+
+  return <></>;
 };
 
 export default LessonPage;

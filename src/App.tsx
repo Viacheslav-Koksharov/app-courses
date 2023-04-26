@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -8,7 +8,9 @@ import Loader from 'components/Loader';
 import Error from 'components/Error';
 import site_unavailable from 'images/site_unavailable.jpg';
 import route_unavailable from 'images/route_unavailable.jpg';
-import { getToken, getCourses } from 'services/api';
+import { IDLE, RESOLVED, REJECTED } from 'helpers/constants';
+import { getToken } from 'services/api';
+import { TokenContext } from 'context/TokenContextProvider';
 import { colors } from 'utils/colors';
 
 const Homepage = lazy(
@@ -22,41 +24,42 @@ const LessonPage = lazy(
 );
 
 const App: React.FC = () => {
-  const [courses, setCourses] = useState(null);
+  const { setToken } = useContext(TokenContext);
+  const [status, setStatus] = useState(IDLE);
   const [error, setError] = useState(null);
   const { main } = colors;
 
   useEffect(() => {
-    getToken()
-      .then(({ token }) => getCourses(token))
-      .then(response => {
-        if (response.message) {
-          setError(response.message);
-        } else {
-          setCourses(response);
-        }
-      })
-      .catch(({ message }) => setError(message));
-  }, []);
+    getToken().then(response => {
+      if (response.message) {
+        setStatus(REJECTED);
+        setError(response.message);
+      } else {
+        setStatus(RESOLVED);
+        setToken(response);
+      }
+    });
+  }, [setToken]);
 
-  return (
-    <Container>
-      <Suspense
-        fallback={
-          <Loader
-            ariaLabel={'ThreeDots'}
-            height={100}
-            width={100}
-            radius={5}
-            color={main}
-          />
-        }
-      >
-        {error ? (
-          <Error error={error} image={site_unavailable} />
-        ) : (
+  if (status === REJECTED)
+    return <Error error={error} image={site_unavailable} />;
+
+  if (status === RESOLVED)
+    return (
+      <Container>
+        <Suspense
+          fallback={
+            <Loader
+              ariaLabel={'ThreeDots'}
+              height={100}
+              width={100}
+              radius={5}
+              color={main}
+            />
+          }
+        >
           <Routes>
-            <Route path='/' element={<Homepage allCourses={courses} />} />
+            <Route path='/' element={<Homepage />} />
             <Route path='/courses/:id' element={<CoursePage />}>
               <Route path='lesson' element={<LessonPage />} />
             </Route>
@@ -65,11 +68,12 @@ const App: React.FC = () => {
               element={<Error image={route_unavailable} route />}
             />
           </Routes>
-        )}
-      </Suspense>
-      <ToastContainer />
-    </Container>
-  );
+        </Suspense>
+        <ToastContainer />
+      </Container>
+    );
+
+  return <></>;
 };
 
 export default App;

@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
-import Hls from 'hls.js';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
-import { onHoverElement } from 'helpers/hoverHelper';
-import { ICoursesItemComponentProps } from 'interfaces/CoursesItem.interfaces';
+import { HLS_IS_SUPPORTED } from 'helpers/constants';
+import { handleElementFormat } from 'helpers/formatHelper';
+import { handleElementHover } from 'helpers/hoverHelper';
+import { ICoursesItemComponentProps } from 'interfaces/CoursesItem.interface';
 import {
   ListItemStyles,
   LinkItemStyles,
@@ -20,31 +21,26 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const { id, previewImageLink, meta, title, lessonsCount, rating } = course;
   const { courseVideoPreview, skills } = meta;
-  const hlsIsSupported = window.Hls.isSupported();
-  const videoLink = courseVideoPreview?.link;
-  const videoDuration = courseVideoPreview?.duration;
+  const courseVideoLink = courseVideoPreview?.link;
+  const courseVideoDuration = courseVideoPreview?.duration;
 
   useEffect(() => {
-    if (hlsIsSupported && videoLink && videoDuration) {
+    if (HLS_IS_SUPPORTED && courseVideoLink && courseVideoDuration) {
       const video = videoRef.current as HTMLMediaElement;
 
       if (video) {
         video.setAttribute('poster', previewImageLink + '/cover.webp');
-
-        const hls = new Hls();
-        hls.loadSource(videoLink);
-        hls.attachMedia(video);
-
-        onHoverElement(video);
+        handleElementFormat(video, courseVideoLink);
+        handleElementHover(video);
       }
     }
-  }, [course, hlsIsSupported, videoLink, videoDuration, previewImageLink]);
+  }, [course, courseVideoLink, courseVideoDuration, previewImageLink]);
 
   useEffect(() => {
     const image = imageRef.current;
 
     if (image) {
-      onHoverElement(image, `${previewImageLink + '/cover.webp'}`);
+      handleElementHover(image, `${previewImageLink + '/cover.webp'}`);
     }
   }, [previewImageLink]);
 
@@ -52,7 +48,7 @@ const CoursesItem = ({ course }: ICoursesItemComponentProps) => {
     <ListItemStyles key={id}>
       <LinkItemStyles to={`/courses/${id}`}>
         <ImageContainerStyles>
-          {videoLink && videoDuration ? (
+          {courseVideoLink && courseVideoDuration ? (
             <video ref={videoRef} width='100%' height='100%' muted />
           ) : (
             <img

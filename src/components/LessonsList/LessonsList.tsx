@@ -8,23 +8,22 @@ import {
   LinkItemStyles,
 } from 'components/LessonsList/Lesson.styled';
 
-const LessonsList = ({ oneCourse }) => {
+const LessonsList = ({ lessons }) => {
   const { setLesson } = useContext(LessonContext);
-  const { lessons } = oneCourse;
   const sortedLessons = useMemo(
     () => [...lessons].sort((a, b) => a.order - b.order),
     [lessons],
   );
 
-  const showNotification = ({ order, title }) =>
+  const handleNotification = ({ order, title }) =>
     toast(`The video for the lesson ${order} "${title}" is locked!`);
 
-  const handleShowVideo = (e, lesson) => {
+  const handleVideoPlayback = (e, lesson) => {
     e.preventDefault();
 
     if (lesson?.status === 'locked') {
       setLesson(null);
-      showNotification(lesson);
+      handleNotification(lesson);
     } else {
       setLesson(lesson);
     }
@@ -34,14 +33,15 @@ const LessonsList = ({ oneCourse }) => {
     <>
       <ListStyles>
         {sortedLessons?.map(lesson => {
-          const { id, order, title } = lesson;
-
           return (
-            <ListItemStyles key={id} onClick={e => handleShowVideo(e, lesson)}>
+            <ListItemStyles
+              key={lesson.id}
+              onClick={e => handleVideoPlayback(e, lesson)}
+            >
               <LinkItemStyles to={'lesson'}>
-                <b>Lesson {order}.</b>
+                <b>Lesson {lesson.order}.</b>
                 <br />
-                {title}
+                {lesson.title}
               </LinkItemStyles>
             </ListItemStyles>
           );

@@ -1,43 +1,39 @@
 import { useEffect, useState } from 'react';
 import { BsArrowUpSquareFill } from 'react-icons/bs';
+import { handleScrollToTop } from 'helpers/scrollHelper';
 import { ButtonStyles } from 'components/ScrollTopButton/ScrollTopButton.styled';
 
-const ScrollButton = () => {
-  const [visible, setVisible] = useState(false);
+const ScrollTopButton = () => {
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const toggleVisible = () => {
-      const scrolled = document.documentElement.scrollTop;
+    const handleVisibility = () => {
+      const scroll = document.documentElement.scrollTop;
 
-      if (scrolled > 300) {
-        setVisible(true);
-      } else if (scrolled <= 300) {
-        setVisible(false);
+      if (scroll > 300) {
+        setIsVisible(true);
+      }
+
+      if (scroll <= 300) {
+        setIsVisible(false);
       }
     };
 
-    window.addEventListener('scroll', toggleVisible);
+    window.addEventListener('scroll', handleVisibility);
 
     return () => {
-      window.removeEventListener('scroll', toggleVisible);
+      window.removeEventListener('scroll', handleVisibility);
     };
   }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
 
   return (
     <ButtonStyles>
       <BsArrowUpSquareFill
-        onClick={scrollToTop}
-        style={{ display: visible ? 'inline' : 'none' }}
+        onClick={handleScrollToTop}
+        style={{ display: isVisible ? 'inline' : 'none' }}
       />
     </ButtonStyles>
   );
 };
 
-export default ScrollButton;
+export default ScrollTopButton;

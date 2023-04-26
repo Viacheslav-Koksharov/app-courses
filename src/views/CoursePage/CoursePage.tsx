@@ -1,15 +1,17 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import Hls from 'hls.js';
 import LessonsList from 'components/LessonsList';
 import Loader from 'components/Loader';
 import Error from 'components/Error';
 import site_unavailable from 'images/site_unavailable.jpg';
 import video_unavailable from 'images/video_unavailable.png';
-import { IDLE, PENDING, RESOLVED, REJECTED } from 'helpers/Statuses';
+import { IDLE, PENDING, RESOLVED, REJECTED, HLS_IS_SUPPORTED } from 'helpers/constants';
+import { handleElementFormat } from 'helpers/formatHelper';
+import { handleScrollToTop } from 'helpers/scrollHelper';
 import { getCourseByID } from 'services/api';
+import { TokenContext } from 'context/TokenContextProvider';
+import { ICoursesItem } from 'interfaces/CoursesItem.interface';
 import { colors } from 'utils/colors';
-import { ICoursesItem } from 'interfaces/CoursesItem.interfaces';
 import {
   TitleStyles,
   ImageContainerStyles,
@@ -19,51 +21,44 @@ import {
 } from 'views/CoursePage/CoursePage.styled';
 
 const CoursePage = () => {
+  const { token } = useContext(TokenContext);
+  const [status, setStatus] = useState(IDLE);
   const [course, setCourse] = useState<ICoursesItem>();
   const [error, setError] = useState(null);
-  const [status, setStatus] = useState(IDLE);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { id } = useParams();
   const firstLesson = course?.lessons![0];
-  const { main } = colors;
-  const hlsIsSupported = window.Hls.isSupported();
   const firstLessonLink = firstLesson?.link;
   const firstLessonDuration = firstLesson?.duration;
+  const { main } = colors;
 
   useEffect(() => {
     setStatus(PENDING);
 
-    getCourseByID(id).then(response => {
-      if (response.message) {
-        setStatus(REJECTED);
-        setError(response.message);
-      } else {
-        setStatus(RESOLVED);
-        setCourse(response);
-      }
-    });
+    if (id && token) {
+      getCourseByID(id, token).then(response => {
+        if (response.message) {
+          setStatus(REJECTED);
+          setError(response.message);
+        } else {
+          setStatus(RESOLVED);
+          setCourse(response);
+        }
+      });
 
-    scrollToTop();
-  }, [id]);
+      handleScrollToTop();
+    }
+  }, [id, token]);
 
   useEffect(() => {
-    if (hlsIsSupported && firstLessonLink) {
+    if (HLS_IS_SUPPORTED && firstLessonLink) {
       const video = videoRef.current as HTMLMediaElement;
 
       if (video) {
-        const hls = new Hls();
-        hls.loadSource(firstLessonLink);
-        hls.attachMedia(video);
+        handleElementFormat(video, firstLessonLink);
       }
     }
-  }, [hlsIsSupported, course?.lessons, firstLessonLink]);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
+  }, [firstLessonLink]);
 
   if (status === PENDING)
     return (
@@ -87,7 +82,7 @@ const CoursePage = () => {
           {firstLessonLink && firstLessonDuration ? (
             <video ref={videoRef} width='100%' height='100%' controls />
           ) : (
-            <img src={video_unavailable} alt='banner' />
+            <img src={video_unavailable} alt='video unavailable' />
           )}
         </ImageContainerStyles>
         <TextStyles>Description: {course?.description}</TextStyles>
@@ -96,7 +91,7 @@ const CoursePage = () => {
             <SkillItemStyles key={skill}>#{skill}</SkillItemStyles>
           ))}
         </SkillsListStyles>
-        <LessonsList oneCourse={course} />
+        <LessonsList lessons={course?.lessons} />
       </>
     );
 
