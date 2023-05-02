@@ -3,26 +3,32 @@ import { Outlet } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { LessonContext } from 'context/LessonContextProvider';
 import {
+  ILessonItem,
+  ILessonsItemComponentProps,
+} from 'interfaces/LessonsItem.interface';
+import {
   ListStyles,
   ListItemStyles,
   LinkItemStyles,
 } from 'components/LessonsList/Lesson.styled';
 
-const LessonsList = ({ lessons }) => {
+const LessonsList = ({ lessons }: ILessonsItemComponentProps) => {
   const { setLesson } = useContext(LessonContext);
   const sortedLessons = useMemo(
     () => [...lessons].sort((a, b) => a.order - b.order),
     [lessons],
   );
 
-  const handleNotification = ({ order, title }) =>
+  const handleNotification = ({ order, title }: ILessonItem) =>
     toast(`The video for the lesson ${order} "${title}" is locked!`);
 
-  const handleVideoPlayback = (e, lesson) => {
+  const handleVideoPlayback = (
+    e: React.SyntheticEvent,
+    lesson: ILessonItem,
+  ) => {
     e.preventDefault();
 
     if (lesson?.status === 'locked') {
-      setLesson(null);
       handleNotification(lesson);
     } else {
       setLesson(lesson);
@@ -32,20 +38,18 @@ const LessonsList = ({ lessons }) => {
   return (
     <>
       <ListStyles>
-        {sortedLessons?.map(lesson => {
-          return (
-            <ListItemStyles
-              key={lesson.id}
-              onClick={e => handleVideoPlayback(e, lesson)}
-            >
-              <LinkItemStyles to={'lesson'}>
-                <b>Lesson {lesson.order}.</b>
-                <br />
-                {lesson.title}
-              </LinkItemStyles>
-            </ListItemStyles>
-          );
-        })}
+        {sortedLessons?.map(lesson => (
+          <ListItemStyles
+            key={lesson.id}
+            onClick={e => handleVideoPlayback(e, lesson)}
+          >
+            <LinkItemStyles to={'lesson'}>
+              <b>Lesson {lesson.order}.</b>
+              <br />
+              {lesson.title}
+            </LinkItemStyles>
+          </ListItemStyles>
+        ))}
       </ListStyles>
       <Outlet />
     </>

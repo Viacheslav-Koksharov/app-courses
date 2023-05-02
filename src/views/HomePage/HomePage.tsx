@@ -1,62 +1,53 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
+import Loader from 'components/Loader';
 import CoursesList from 'components/CoursesList';
 import ScrollTopButton from 'components/ScrollTopButton';
-import Loader from 'components/Loader';
 import Error from 'components/Error';
 import site_unavailable from 'images/site_unavailable.jpg';
-import { IDLE, PENDING, RESOLVED, REJECTED } from 'helpers/constants';
-import { getCourses } from 'services/api';
+import useFetch from 'hooks/useFetch';
+import { COURSES_URL } from 'helpers/constants';
 import { TokenContext } from 'context/TokenContextProvider';
 import { colors } from 'utils/colors';
 import { TitleStyles } from 'views/HomePage/HomePage.styled';
 
 const HomePage = () => {
+  const listRef = useRef<HTMLUListElement>(null);
   const { token } = useContext(TokenContext);
-  const [status, setStatus] = useState(IDLE);
+  const { response, isLoading, error } = useFetch(COURSES_URL, token);
   const [courses, setCourses] = useState(null);
-  const [error, setError] = useState(null);
   const { main } = colors;
 
   useEffect(() => {
-    setStatus(PENDING);
+    if (listRef.current) return;
 
-    if (token) {
-      getCourses(token).then(response => {
-        if (response.message) {
-          setStatus(REJECTED);
-          setError(response.message);
-        } else {
-          setStatus(RESOLVED);
-          setCourses(response);
-        }
-      });
+    if (response && response['courses']) {
+      setCourses(response['courses']);
     }
-  }, [token]);
+  }, [token, response]);
 
-  if (status === PENDING)
-    return (
-      <Loader
-        ariaLabel={'ThreeDots'}
-        height={100}
-        width={100}
-        radius={5}
-        color={main}
-      />
-    );
+  return (
+    <>
+      {isLoading && (
+        <Loader
+          ariaLabel={'ThreeDots'}
+          height={100}
+          width={100}
+          radius={5}
+          color={main}
+        />
+      )}
 
-  if (status === REJECTED)
-    return <Error error={error} image={site_unavailable} />;
+      {courses && (
+        <>
+          <TitleStyles>Current Courses</TitleStyles>
+          <CoursesList currentRef={listRef} courses={courses} />
+          <ScrollTopButton />
+        </>
+      )}
 
-  if (status === RESOLVED)
-    return (
-      <>
-        <TitleStyles>Current Courses</TitleStyles>
-        <CoursesList allCourses={courses} />
-        <ScrollTopButton />
-      </>
-    );
-
-  return <></>;
+      {error && <Error error={error} image={site_unavailable} />}
+    </>
+  );
 };
 
 export default HomePage;

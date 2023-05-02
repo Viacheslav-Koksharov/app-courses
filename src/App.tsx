@@ -1,79 +1,61 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Container from 'components/Container';
-import Loader from 'components/Loader';
 import Error from 'components/Error';
 import site_unavailable from 'images/site_unavailable.jpg';
 import route_unavailable from 'images/route_unavailable.jpg';
-import { IDLE, RESOLVED, REJECTED } from 'helpers/constants';
-import { getToken } from 'services/api';
+import useFetch from 'hooks/useFetch';
+import { TOKEN_URL } from 'helpers/constants';
 import { TokenContext } from 'context/TokenContextProvider';
-import { colors } from 'utils/colors';
 
 const Homepage = lazy(
-  () => import('views/HomePage/index' /* webpackChunkName: 'HomePage' */),
+  () => import('views/HomePage' /* webpackChunkName: 'HomePage' */),
 );
 const CoursePage = lazy(
-  () => import('views/CoursePage/index' /* webpackChunkName: 'CoursePage' */),
+  () => import('views/CoursePage' /* webpackChunkName: 'CoursePage' */),
 );
 const LessonPage = lazy(
-  () => import('views/LessonPage/index' /* webpackChunkName: 'LessonPage' */),
+  () => import('views/LessonPage' /* webpackChunkName: 'LessonPage' */),
 );
 
 const App: React.FC = () => {
-  const { setToken } = useContext(TokenContext);
-  const [status, setStatus] = useState(IDLE);
-  const [error, setError] = useState(null);
-  const { main } = colors;
+  const { token, setToken } = useContext(TokenContext);
+  const { response, error } = useFetch(TOKEN_URL);
 
   useEffect(() => {
-    getToken().then(response => {
-      if (response.message) {
-        setStatus(REJECTED);
-        setError(response.message);
-      } else {
-        setStatus(RESOLVED);
-        setToken(response);
-      }
-    });
-  }, [setToken]);
+    if (response && response['token']) {
+      setToken(response['token']);
+    }
+  }, [response, setToken]);
 
-  if (status === REJECTED)
-    return <Error error={error} image={site_unavailable} />;
+  return (
+    <>
+      {token && (
+        <Container>
+          <Suspense>
+            <Routes>
+              <Route path='/' element={<Homepage />} />
+              <Route path='/courses/:id' element={<CoursePage />}>
+                <Route path='lesson' element={<LessonPage />} />
+              </Route>
+              <Route
+                path='*'
+                element={
+                  <Error error={error} image={route_unavailable} route />
+                }
+              />
+            </Routes>
+          </Suspense>
+          <ToastContainer />
+        </Container>
+      )}
 
-  if (status === RESOLVED)
-    return (
-      <Container>
-        <Suspense
-          fallback={
-            <Loader
-              ariaLabel={'ThreeDots'}
-              height={100}
-              width={100}
-              radius={5}
-              color={main}
-            />
-          }
-        >
-          <Routes>
-            <Route path='/' element={<Homepage />} />
-            <Route path='/courses/:id' element={<CoursePage />}>
-              <Route path='lesson' element={<LessonPage />} />
-            </Route>
-            <Route
-              path='*'
-              element={<Error image={route_unavailable} route />}
-            />
-          </Routes>
-        </Suspense>
-        <ToastContainer />
-      </Container>
-    );
-
-  return <></>;
+      {error && <Error error={error} image={site_unavailable} />}
+    </>
+  );
 };
 
 export default App;
