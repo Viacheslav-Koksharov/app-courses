@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import CoursesItem from 'components/CoursesItem';
 import { handleScrollToTop } from 'helpers/scrollHelper';
-import {usePagination} from 'petrovich-custom-hooks';
+import {usePagination} from 'custom-hooks-ts-lib';
 import { ICoursesListProps } from 'interfaces/CoursesItem.interface';
 import {
   ListStyles,
